@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Manrope:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,43 +6,50 @@
 
 @layer base {
   :root {
-    --background: 40 33% 96%;
-    --foreground: 0 0% 7%;
+    --background: 38 27% 95%;
+    --foreground: 0 0% 5%;
 
-    --card: 40 33% 96%;
-    --card-foreground: 0 0% 7%;
+    --card: 38 27% 95%;
+    --card-foreground: 0 0% 5%;
 
-    --popover: 40 33% 96%;
-    --popover-foreground: 0 0% 7%;
+    --popover: 38 27% 95%;
+    --popover-foreground: 0 0% 5%;
 
     --primary: 150 44% 29%;
-    --primary-foreground: 0 0% 100%;
+    --primary-foreground: 38 27% 95%;
 
-    --secondary: 40 33% 96%;
-    --secondary-foreground: 0 0% 7%;
+    --secondary: 38 27% 95%;
+    --secondary-foreground: 0 0% 5%;
 
-    --muted: 37 18% 90%;
-    --muted-foreground: 0 0% 53%;
+    --muted: 36 18% 90%;
+    --muted-foreground: 0 0% 60%;
 
     --accent: 150 44% 29%;
-    --accent-foreground: 0 0% 100%;
+    --accent-foreground: 38 27% 95%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 34 20% 87%;
-    --input: 34 20% 87%;
+    --border: 35 20% 88%;
+    --input: 35 20% 88%;
     --ring: 150 44% 29%;
 
     --radius: 0px;
 
-    --sidebar-background: 40 33% 96%;
-    --sidebar-foreground: 0 0% 7%;
+    --contact-bg: 0 0% 5%;
+    --contact-fg: 38 27% 95%;
+    --contact-accent: 145 40% 49%;
+    --contact-muted: 0 0% 33%;
+    --contact-border: 0 0% 13%;
+    --contact-dim: 0 0% 27%;
+
+    --sidebar-background: 38 27% 95%;
+    --sidebar-foreground: 0 0% 5%;
     --sidebar-primary: 150 44% 29%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 37 18% 90%;
-    --sidebar-accent-foreground: 0 0% 7%;
-    --sidebar-border: 34 20% 87%;
+    --sidebar-primary-foreground: 38 27% 95%;
+    --sidebar-accent: 36 18% 90%;
+    --sidebar-accent-foreground: 0 0% 5%;
+    --sidebar-border: 35 20% 88%;
     --sidebar-ring: 150 44% 29%;
   }
 }
@@ -50,84 +57,80 @@
 @layer base {
   * {
     @apply border-border;
+    cursor: none !important;
   }
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-weight: 300;
-    cursor: none;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
-    line-height: 0.95;
+    font-family: 'Cormorant Garamond', serif;
   }
 
   ::selection {
-    background-color: hsl(150 44% 29% / 0.15);
+    background-color: hsl(150 44% 29% / 0.12);
   }
 }
 
 @layer components {
-  .label-mono {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
+  .mono-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.15em;
+    font-weight: 400;
+  }
+
+  .mono-label-green {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 400;
     color: hsl(var(--primary));
   }
 
-  .label-mono-muted {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: hsl(var(--muted-foreground));
+  .editorial-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.6;
   }
 
-  .body-text {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    line-height: 1.75;
-  }
-
-  .section-divider {
-    border: none;
-    border-top: 1px solid hsl(var(--border));
-  }
-
-  .nav-link {
-    @apply relative;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-  }
-
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: hsl(var(--primary));
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.2s ease;
-  }
-
-  .nav-link:hover::after {
-    transform: scaleX(1);
-  }
-
-  .fade-up {
+  .scroll-fade {
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition: opacity 0.5s ease;
   }
 
-  .fade-up.visible {
+  .scroll-fade.visible {
     opacity: 1;
-    transform: translateY(0);
   }
+
+  .hero-line {
+    transform: translateY(100%);
+    opacity: 0;
+    animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .hero-line-1 { animation-delay: 0s; }
+  .hero-line-2 { animation-delay: 0.1s; }
+  .hero-line-3 { animation-delay: 0.2s; }
+  .hero-sub { animation-delay: 0.35s; }
+  .hero-links { animation-delay: 0.5s; }
+}
+
+@keyframes slideUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
