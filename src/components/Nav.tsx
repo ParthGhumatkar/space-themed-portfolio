@@ -1,32 +1,27 @@
 const Nav = () => {
-  const links = ["About", "Work", "Stack", "Contact"];
-
   const scrollTo = (id: string) => {
-    document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/80">
-      <div className="max-w-content mx-auto flex items-center justify-between px-6 py-5">
-        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="font-display text-xl font-bold tracking-tight cursor-none">
-          PG
-        </button>
-        <div className="flex items-center gap-8">
-          {links.map((l) => (
-            <button
-              key={l}
-              onClick={() => scrollTo(l)}
-              className="nav-link text-foreground/70 hover:text-foreground transition-colors duration-200 cursor-none"
-            >
-              {l}
-            </button>
-          ))}
+    <nav className="fixed top-0 left-0 right-0 z-50 px-[52px] py-6 flex items-center justify-between">
+      <span className="font-body text-xs tracking-wide text-foreground">Parth Ghumatkar</span>
+      <div className="flex items-center gap-6">
+        {["about", "work", "contact"].map((s) => (
           <button
-            onClick={() => scrollTo("Contact")}
-            className="bg-primary text-primary-foreground px-4 py-2 font-body text-xs tracking-wide cursor-none transition-opacity duration-200 hover:opacity-90"
+            key={s}
+            onClick={() => scrollTo(s)}
+            className="font-body text-[11px] text-muted-foreground hover:text-foreground transition-colors duration-200 capitalize"
           >
-            Let's talk
+            {s}
           </button>
+        ))}
+        <div className="flex items-center gap-2 ml-2">
+          <span
+            className="w-2 h-2 rounded-full bg-primary"
+            style={{ animation: "pulse-dot 2s ease infinite" }}
+          />
+          <span className="font-mono text-[10px] text-muted-foreground">open to work</span>
         </div>
       </div>
     </nav>

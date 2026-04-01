@@ -8,18 +8,17 @@ export default {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1100px",
-      },
+      screens: { "2xl": "1100px" },
     },
     extend: {
       maxWidth: {
         content: "1100px",
+        copy: "540px",
       },
       fontFamily: {
-        display: ['"Playfair Display"', 'serif'],
-        body: ['"DM Sans"', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'monospace'],
+        display: ['"Cormorant Garamond"', 'serif'],
+        body: ['"Manrope"', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -54,6 +53,14 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        contact: {
+          bg: "hsl(var(--contact-bg))",
+          fg: "hsl(var(--contact-fg))",
+          accent: "hsl(var(--contact-accent))",
+          muted: "hsl(var(--contact-muted))",
+          border: "hsl(var(--contact-border))",
+          dim: "hsl(var(--contact-dim))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",

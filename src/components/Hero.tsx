@@ -1,42 +1,87 @@
-import ScrollReveal from "./ScrollReveal";
-
 const Hero = () => (
-  <section className="min-h-screen flex flex-col justify-center px-6 max-w-content mx-auto relative">
-    <ScrollReveal>
-      <p className="label-mono mb-8">Pune, India — Full Stack Developer</p>
-    </ScrollReveal>
+  <section className="h-screen relative px-[52px] pb-[52px] flex flex-col justify-end">
+    {/* Top left label */}
+    <span
+      className="mono-label text-muted-foreground absolute"
+      style={{ top: 88, left: 52 }}
+    >
+      Est. 2011 — Pune, India
+    </span>
 
-    <ScrollReveal>
-      <h1 className="font-display font-bold text-foreground" style={{ fontSize: "clamp(56px, 10vw, 120px)" }}>
-        Building things<br />that <em className="text-primary italic">matter.</em>
-      </h1>
-    </ScrollReveal>
+    {/* Bottom right vertical label */}
+    <span
+      className="mono-label absolute text-[9px]"
+      style={{
+        bottom: 52,
+        right: 52,
+        writingMode: "vertical-rl",
+        transform: "rotate(180deg)",
+        color: "#CCCCCC",
+        letterSpacing: "0.15em",
+      }}
+    >
+      Full Stack Developer
+    </span>
 
-    <ScrollReveal className="mt-8">
-      <p className="font-body text-muted-foreground text-lg max-w-lg" style={{ fontWeight: 300 }}>
-        Final-year CS student. Two live products. Always shipping.
-      </p>
-    </ScrollReveal>
+    {/* Headline */}
+    <div>
+      <div className="overflow-hidden">
+        <h1
+          className="font-display font-black hero-line hero-line-1"
+          style={{ fontSize: "clamp(64px, 9vw, 128px)", lineHeight: 0.88 }}
+        >
+          I build things
+        </h1>
+      </div>
+      <div className="overflow-hidden">
+        <h1
+          className="font-display font-black hero-line hero-line-2"
+          style={{ fontSize: "clamp(64px, 9vw, 128px)", lineHeight: 0.88 }}
+        >
+          people{" "}
+          <em className="font-display italic font-light text-primary">actually</em>
+        </h1>
+      </div>
+      <div className="overflow-hidden">
+        <h1
+          className="font-display font-black hero-line hero-line-3"
+          style={{ fontSize: "clamp(64px, 9vw, 128px)", lineHeight: 0.88 }}
+        >
+          use.
+        </h1>
+      </div>
+    </div>
 
-    <ScrollReveal className="mt-10 flex items-center gap-6">
+    {/* Subtitle */}
+    <p
+      className="font-body text-[15px] text-muted-foreground mt-8 max-w-[400px] hero-line hero-sub"
+      style={{ fontWeight: 300 }}
+    >
+      Final-year CS student. Two live products. Building a third.
+    </p>
+
+    {/* Links */}
+    <div className="flex items-center gap-6 mt-10 hero-line hero-links">
       <a
         href="#work"
-        onClick={(e) => { e.preventDefault(); document.getElementById("work")?.scrollIntoView({ behavior: "smooth" }); }}
-        className="bg-primary text-primary-foreground px-6 py-3 font-body text-sm cursor-none inline-block transition-opacity duration-200 hover:opacity-90"
+        onClick={(e) => {
+          e.preventDefault();
+          document.getElementById("work")?.scrollIntoView({ behavior: "smooth" });
+        }}
+        className="font-body text-[13px] text-foreground relative group"
       >
-        View Work →
+        View work ↓
+        <span className="absolute bottom-[-2px] left-0 w-full h-px bg-foreground origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
       </a>
       <a
         href="https://github.com/ParthGhumatkar"
         target="_blank"
         rel="noopener noreferrer"
-        className="font-body text-sm text-muted-foreground hover:text-primary transition-colors duration-200 cursor-none"
+        className="font-body text-[13px] text-muted-foreground hover:text-foreground transition-colors duration-200"
       >
         GitHub ↗
       </a>
-    </ScrollReveal>
-
-    <hr className="section-divider absolute bottom-0 left-6 right-6" />
+    </div>
   </section>
 );
 
