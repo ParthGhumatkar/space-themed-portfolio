@@ -1,33 +1,44 @@
-import ScrollReveal from "./ScrollReveal";
+import ScrollFade from "./ScrollFade";
 
-const tools = [
-  { cat: "FRAMEWORK", val: "Next.js 14 App Router + TypeScript" },
-  { cat: "DATABASE", val: "Neon PostgreSQL — serverless, edge-ready" },
-  { cat: "AI", val: "OpenAI GPT-4 Turbo · Ollama · Groq" },
-  { cat: "DEPLOYMENT", val: "Vercel + GitHub Actions" },
-  { cat: "STYLING", val: "Tailwind CSS" },
-  { cat: "HARDWARE", val: "ESP8266 · Arduino · Python automation" },
-  { cat: "IDE", val: "Windsurf (Cascade AI) · Cursor" },
+const items = [
+  "Next.js 14", "TypeScript", "Neon PostgreSQL", "Vercel",
+  "OpenAI GPT-4", "Tailwind CSS", "Ollama", "Python",
+  "ESP8266", "Arduino", "Windsurf", "Cursor",
+  "GitHub Actions", "Groq",
 ];
 
 const Stack = () => (
-  <section id="stack" className="px-6 max-w-content mx-auto py-24">
-    <ScrollReveal>
-      <p className="label-mono mb-4">Tools</p>
-    </ScrollReveal>
+  <section id="stack" className="py-[200px] px-[52px]">
+    <ScrollFade>
+      <span className="mono-label text-muted-foreground mb-6 block">Tools & Stack</span>
+      <h2 className="font-display font-bold text-[52px] leading-none mb-12">
+        What I build <em className="italic font-light text-primary">with</em>
+      </h2>
+    </ScrollFade>
 
-    <ScrollReveal>
-      <div>
-        {tools.map((t) => (
-          <div key={t.cat} className="flex justify-between items-baseline py-4 border-b border-border">
-            <span className="label-mono-muted w-32 shrink-0">{t.cat}</span>
-            <span className="font-body text-sm text-foreground text-right">{t.val}</span>
-          </div>
-        ))}
+    <ScrollFade>
+      <div className="overflow-x-auto pb-4 -mx-[52px] px-[52px]" style={{ scrollbarWidth: "none" }}>
+        <div className="flex gap-3 w-max">
+          {items.map((item) => (
+            <span
+              key={item}
+              className="border border-border px-6 py-3 font-mono text-[11px] text-foreground whitespace-nowrap hover:bg-primary hover:text-primary-foreground transition-all duration-150"
+              style={{ borderRadius: 2 }}
+            >
+              {item}
+            </span>
+          ))}
+        </div>
       </div>
-    </ScrollReveal>
+    </ScrollFade>
 
-    <hr className="section-divider mt-24" />
+    <ScrollFade className="mt-12">
+      <div className="font-body text-[13px] text-muted-foreground space-y-1 max-w-copy" style={{ fontWeight: 300 }}>
+        <p>Deployed on Vercel. Data on Neon.</p>
+        <p>AI via OpenAI and local Ollama models.</p>
+        <p>Hardware when screens aren't enough.</p>
+      </div>
+    </ScrollFade>
   </section>
 );
 

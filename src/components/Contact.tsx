@@ -1,49 +1,55 @@
-import ScrollReveal from "./ScrollReveal";
+import ScrollFade from "./ScrollFade";
 
 const Contact = () => (
-  <section id="contact" className="px-6 max-w-content mx-auto py-32 text-center">
-    <ScrollReveal>
-      <p className="label-mono mb-4">Say hello</p>
-    </ScrollReveal>
+  <section id="contact" className="bg-contact-bg text-contact-fg">
+    <div className="px-[52px] py-[120px]">
+      <ScrollFade>
+        <span className="mono-label text-contact-muted mb-8 block">Get In Touch</span>
+      </ScrollFade>
 
-    <ScrollReveal>
-      <h2 className="font-display font-bold text-foreground" style={{ fontSize: "clamp(40px, 8vw, 80px)" }}>
-        Let's build<br />something.
-      </h2>
-    </ScrollReveal>
-
-    <ScrollReveal>
-      <p className="font-body text-muted-foreground mt-6 text-lg" style={{ fontWeight: 300 }}>
-        Open to freelance, collabs, and interesting problems.
-      </p>
-    </ScrollReveal>
-
-    <ScrollReveal className="mt-10">
-      <a
-        href="mailto:parth@parthghumatkar.com"
-        className="font-body text-xl text-primary underline underline-offset-4 hover:opacity-70 transition-opacity duration-200 cursor-none"
-      >
-        parth@parthghumatkar.com
-      </a>
-    </ScrollReveal>
-
-    <ScrollReveal className="mt-8 flex items-center justify-center gap-6">
-      {[
-        { label: "GitHub", href: "https://github.com/ParthGhumatkar" },
-        { label: "LinkedIn", href: "https://linkedin.com/in/parthghumatkar" },
-        { label: "WhatsApp", href: "https://wa.me/919876543210" },
-      ].map((l) => (
-        <a
-          key={l.label}
-          href={l.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-body text-sm text-muted-foreground hover:text-primary transition-colors duration-200 cursor-none"
+      <ScrollFade>
+        <h2
+          className="font-display font-black"
+          style={{ fontSize: "clamp(56px, 8vw, 112px)", lineHeight: 0.92 }}
         >
-          / {l.label}
+          Got something<br />
+          to <em className="italic font-light text-contact-accent">build?</em>
+        </h2>
+      </ScrollFade>
+
+      <ScrollFade className="mt-10">
+        <a
+          href="mailto:parth@parthghumatkar.com"
+          className="font-body text-lg text-contact-accent border-b border-contact-accent pb-1 hover:text-contact-fg transition-colors duration-200 inline-block"
+        >
+          parth@parthghumatkar.com
         </a>
-      ))}
-    </ScrollReveal>
+      </ScrollFade>
+
+      <ScrollFade className="mt-12 flex items-center gap-6">
+        {[
+          { label: "GitHub", href: "https://github.com/ParthGhumatkar" },
+          { label: "LinkedIn", href: "https://linkedin.com/in/parthghumatkar" },
+          { label: "WhatsApp", href: "https://wa.me/919876543210" },
+        ].map((l) => (
+          <a
+            key={l.label}
+            href={l.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-body text-xs text-contact-dim hover:text-contact-fg transition-colors duration-200"
+          >
+            / {l.label}
+          </a>
+        ))}
+      </ScrollFade>
+    </div>
+
+    {/* Footer */}
+    <div className="border-t border-contact-border px-[52px] py-5 flex items-center justify-between">
+      <span className="font-mono text-[10px] text-contact-muted">© 2025 Parth Ghumatkar</span>
+      <span className="font-mono text-[10px] text-contact-muted">Pune, India</span>
+    </div>
   </section>
 );
 
