@@ -1,46 +1,63 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const CustomCursor = () => {
-  const dotRef = useRef<HTMLDivElement>(null);
+  const dotRef  = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
-  const mouse = useRef({ x: -100, y: -100 });
-  const ringPos = useRef({ x: -100, y: -100 });
-  const [hovering, setHovering] = useState(false);
+  const pos     = useRef({ x: -200, y: -200 });
+  const last    = useRef({ x: -200, y: -200 });
+  const ring    = useRef({ x: -200, y: -200 });
+  const hov     = useRef(false);
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      mouse.current = { x: e.clientX, y: e.clientY };
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
-      }
-    };
+    let raf: number;
 
+    const onMove = (e: MouseEvent) => {
+      last.current = { ...pos.current };
+      pos.current  = { x: e.clientX, y: e.clientY };
+    };
     const onOver = (e: MouseEvent) => {
-      const t = e.target as HTMLElement;
-      if (t.closest("a, button, [role='button']")) setHovering(true);
+      if ((e.target as HTMLElement).closest("a, button, [data-hover]"))
+        hov.current = true;
     };
     const onOut = (e: MouseEvent) => {
-      const t = e.target as HTMLElement;
-      if (t.closest("a, button, [role='button']")) setHovering(false);
+      if ((e.target as HTMLElement).closest("a, button, [data-hover]"))
+        hov.current = false;
     };
 
-    let raf: number;
-    const animate = () => {
-      ringPos.current.x += (mouse.current.x - ringPos.current.x) * 0.08;
-      ringPos.current.y += (mouse.current.y - ringPos.current.y) * 0.08;
-      const size = hovering ? 40 : 24;
-      if (ringRef.current) {
-        ringRef.current.style.width = `${size}px`;
-        ringRef.current.style.height = `${size}px`;
-        ringRef.current.style.transform = `translate(${ringPos.current.x - size / 2}px, ${ringPos.current.y - size / 2}px)`;
+    const tick = () => {
+      const dx    = pos.current.x - last.current.x;
+      const dy    = pos.current.y - last.current.y;
+      const speed = Math.sqrt(dx * dx + dy * dy);
+      last.current = { ...pos.current };
+
+      ring.current.x += (pos.current.x - ring.current.x) * 0.08;
+      ring.current.y += (pos.current.y - ring.current.y) * 0.08;
+
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate(${pos.current.x - 2.5}px, ${pos.current.y - 2.5}px)`;
+        dotRef.current.style.opacity   = hov.current ? "0" : "1";
       }
-      raf = requestAnimationFrame(animate);
+
+      if (ringRef.current) {
+        const isHov = hov.current;
+        const size  = isHov ? 44 : 36;
+        const sx    = isHov ? 1 : 1 + Math.min(speed * 0.012, 0.5);
+        const sy    = isHov ? 1 : 1 - Math.min(speed * 0.008, 0.3);
+        const half  = size / 2;
+        ringRef.current.style.width       = `${size}px`;
+        ringRef.current.style.height      = `${size}px`;
+        ringRef.current.style.transform   = `translate(${ring.current.x - half}px, ${ring.current.y - half}px) scaleX(${sx}) scaleY(${sy})`;
+        ringRef.current.style.borderColor = isHov ? "rgba(42,107,74,0.7)" : "rgba(42,107,74,0.4)";
+        ringRef.current.style.transition  = speed < 1 ? "transform 0.4s ease, border-color 0.15s, width 0.15s, height 0.15s" : "border-color 0.15s, width 0.15s, height 0.15s";
+      }
+
+      raf = requestAnimationFrame(tick);
     };
 
     window.addEventListener("mousemove", onMove);
     document.addEventListener("mouseover", onOver);
     document.addEventListener("mouseout", onOut);
-    raf = requestAnimationFrame(animate);
+    raf = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener("mousemove", onMove);
@@ -48,30 +65,25 @@ const CustomCursor = () => {
       document.removeEventListener("mouseout", onOut);
       cancelAnimationFrame(raf);
     };
-  }, [hovering]);
+  }, []);
 
   return (
     <>
-      <div
-        ref={dotRef}
-        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-primary"
-        style={{
-          width: 6,
-          height: 6,
-          willChange: "transform",
-          opacity: hovering ? 0 : 1,
-          transition: "opacity 0.15s",
-        }}
-      />
-      <div
-        ref={ringRef}
-        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full border border-primary"
-        style={{
-          willChange: "transform, width, height",
-          opacity: 0.5,
-          transition: "width 0.2s, height 0.2s",
-        }}
-      />
+      <div ref={dotRef} style={{
+        position: "fixed", top: 0, left: 0,
+        width: 5, height: 5, borderRadius: "50%",
+        backgroundColor: "var(--green)",
+        pointerEvents: "none", zIndex: 10000,
+        willChange: "transform",
+        transition: "opacity 0.15s ease",
+      }} />
+      <div ref={ringRef} style={{
+        position: "fixed", top: 0, left: 0,
+        width: 36, height: 36, borderRadius: "50%",
+        border: "1px solid rgba(42,107,74,0.4)",
+        pointerEvents: "none", zIndex: 9999,
+        willChange: "transform",
+      }} />
     </>
   );
 };
