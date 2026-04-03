@@ -38,8 +38,8 @@ const Bubble = ({
 }) => {
   const [hov, setHov] = useState(false);
   const moving = Math.abs(offset.x) > 1 || Math.abs(offset.y) > 1;
-  const bubbleBg     = isDark ? "#1c1c1c" : "#D8D4C9";
-  const bubbleBorder = isDark ? "rgba(255,255,255,0.14)" : "rgba(0,0,0,0.12)";
+  const bubbleBg     = isDark ? "rgba(20,22,26,0.85)" : "rgba(220,216,208,0.85)";
+  const bubbleBorder = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
 
   return (
     <div style={{
@@ -141,9 +141,9 @@ const FloatingLogos = () => {
   return (
     <div ref={sectionRef} style={{
       position: "relative", width: "100%", height: 480,
-      backgroundColor: "var(--bg)",
-      borderTop: "1px solid var(--border)",
-      borderBottom: "1px solid var(--border)",
+      backgroundColor: "rgba(6,6,8,0.6)",
+      borderTop: "1px solid rgba(255,255,255,0.04)",
+      borderBottom: "1px solid rgba(255,255,255,0.04)",
       overflow: "hidden",
     }}>
       {BUBBLES.map((b, i) => (
@@ -153,7 +153,7 @@ const FloatingLogos = () => {
       ))}
       <div style={{
         position: "absolute", inset: 0,
-        background: "radial-gradient(ellipse 70% 90% at center, transparent 25%, var(--bg) 100%)",
+        background: "radial-gradient(ellipse 80% 100% at center, transparent 40%, rgba(6,6,8,0.5) 100%)",
         pointerEvents: "none", zIndex: 2,
       }} />
     </div>

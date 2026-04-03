@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const monoSm: React.CSSProperties = {
   fontFamily: "'IBM Plex Mono', monospace",
@@ -37,6 +37,46 @@ const SOCIALS = [
     ),
   },
 ];
+
+// ── Live IST clock + availability indicator ──────────────────────────
+const getIST = () =>
+  new Date().toLocaleTimeString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+
+const ISTClock = () => {
+  const [time, setTime] = useState(getIST);
+
+  useEffect(() => {
+    const id = setInterval(() => setTime(getIST()), 30_000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+      <span style={{
+        width: 5, height: 5,
+        borderRadius: "50%",
+        background: "var(--green)",
+        animation: "pulseDot 2s infinite",
+        flexShrink: 0,
+        display: "inline-block",
+      }} />
+      <span style={{
+        fontFamily: "'IBM Plex Mono', monospace",
+        fontSize: 10,
+        color: "var(--text3)",
+        letterSpacing: "0.08em",
+        textTransform: "uppercase" as const,
+      }}>
+        PUNE, INDIA · IST {time} · Available
+      </span>
+    </span>
+  );
+};
 
 const SocialBtn = ({ s }: { s: typeof SOCIALS[0] }) => {
   const [hov, setHov] = useState(false);
@@ -82,7 +122,7 @@ const Footer = () => (
     <div style={{ padding: "16px 56px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
       <span style={monoSm}>© 2025 · ALL RIGHTS RESERVED</span>
       <span style={{ ...monoSm, display: "none" as const }} className="hidden md:block">BUILT WITH NEXT.JS · DEPLOYED ON VERCEL</span>
-      <span style={monoSm}>PUNE, INDIA · 18.5204° N, 73.8567° E</span>
+      <ISTClock />
     </div>
   </footer>
 );

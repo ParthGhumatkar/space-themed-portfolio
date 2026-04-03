@@ -35,11 +35,6 @@ const Hero = () => {
       {/* Green glow — left atmosphere */}
       <div style={{ position: "absolute", left: "8%", top: "28%", width: 480, height: 340, background: "radial-gradient(ellipse, rgba(42,107,74,0.045) 0%, transparent 70%)", pointerEvents: "none", zIndex: 1 }} />
 
-      {/* PUNE · INDIA label */}
-      <div style={{ position: "absolute", top: 84, left: 56, zIndex: 3, fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--text3)", letterSpacing: "0.25em", textTransform: "uppercase" as const, ...fade(0.35, 0.5) }}>
-        PUNE · INDIA · EST. 2011
-      </div>
-
       {/* Top-right logos */}
       <div className="hidden md:flex" style={{ position: "absolute", top: 84, right: 56, zIndex: 3, alignItems: "center", gap: 16, ...fade(0.5, 0.2) }}>
         <img src={`https://cdn.simpleicons.org/nextdotjs/${logoColor}`} alt="Next.js" style={{ height: 18 }} loading="lazy" decoding="async" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />

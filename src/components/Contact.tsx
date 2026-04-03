@@ -6,10 +6,196 @@ const SOCIALS = [
   { label: "WhatsApp", href: "https://wa.me/919373956958" },
 ];
 
+const EMAIL = "parthghumatkarofficial@gmail.com";
+const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+
+// ── Copy-to-clipboard email with mouse-tracking tooltip ───────────────
+const CopyEmail = () => {
+  const [copied, setCopied] = useState(false);
+  const [show,   setShow]   = useState(false);
+  const [flash,  setFlash]  = useState(false);
+  const [pos,    setPos]    = useState({ x: 0, y: 0 });
+  const ref = useRef<HTMLDivElement>(null);
+
+  const onMove = (e: React.MouseEvent) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    setPos({ x: e.clientX - rect.left + 14, y: e.clientY - rect.top - 44 });
+  };
+
+  const onClick = () => {
+    navigator.clipboard.writeText(EMAIL);
+    setCopied(true);
+    setFlash(true);
+    setTimeout(() => setFlash(false), 500);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div
+      ref={ref}
+      style={{ position: "relative", width: "fit-content", cursor: "pointer", marginTop: 72 }}
+      onMouseMove={onMove}
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+      onClick={onClick}
+    >
+      <span style={{
+        display: "block",
+        fontFamily: "'Manrope', sans-serif", fontWeight: 400,
+        fontSize: "clamp(16px,2.2vw,24px)",
+        color: flash ? "var(--green2)" : "var(--text)",
+        paddingBottom: 10,
+        borderBottom: `1px solid ${show ? "var(--green)" : "var(--border)"}`,
+        transition: "color 0.2s, border-color 0.2s",
+        userSelect: "none" as const,
+      }}>
+        {EMAIL}
+        <span style={{ marginLeft: 10, opacity: show ? 1 : 0, transition: "opacity 0.2s" }}>↗</span>
+      </span>
+
+      {/* Cursor-tracking tooltip */}
+      <div style={{
+        position: "absolute",
+        top: pos.y, left: pos.x,
+        pointerEvents: "none",
+        opacity: show ? 1 : 0,
+        transition: "opacity 0.12s",
+        zIndex: 30,
+      }}>
+        <div style={{
+          background: copied ? "var(--green)" : "var(--bg4)",
+          border: "1px solid var(--border)",
+          padding: "5px 12px",
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontSize: 10,
+          color: copied ? "#060608" : "var(--text2)",
+          letterSpacing: "0.08em",
+          whiteSpace: "nowrap" as const,
+          transition: "background 0.18s, color 0.18s",
+        }}>
+          {copied ? "Copied! ✓" : "Click to copy"}
+        </div>
+      </div>
+
+      <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--text3)", marginTop: 12, letterSpacing: "0.05em", pointerEvents: "none" }}>
+        Usually responds within 24 hours
+      </p>
+    </div>
+  );
+};
+
+// ── Letter-scramble social link ────────────────────────────────────────
+const ScrambleLink = ({ label, href }: { label: string; href: string }) => {
+  const [display, setDisplay] = useState(label.toUpperCase());
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const frameRef = useRef(0);
+
+  const scramble = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    frameRef.current = 0;
+    const total = 14;
+    timerRef.current = setInterval(() => {
+      frameRef.current++;
+      if (frameRef.current >= total) {
+        clearInterval(timerRef.current!);
+        setDisplay(label.toUpperCase());
+        return;
+      }
+      const progress = frameRef.current / total;
+      setDisplay(
+        label.toUpperCase().split("").map((ch, i) =>
+          progress > i / label.length
+            ? ch
+            : SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
+        ).join("")
+      );
+    }, 38);
+  };
+
+  const reset = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setDisplay(label.toUpperCase());
+  };
+
+  useEffect(() => () => { if (timerRef.current) clearInterval(timerRef.current); }, []);
+
+  return (
+    <a
+      href={href} target="_blank" rel="noopener noreferrer"
+      onMouseEnter={scramble}
+      onMouseLeave={reset}
+      style={{
+        fontFamily: "'IBM Plex Mono', monospace",
+        fontSize: 13,
+        color: "var(--text2)",
+        textDecoration: "none",
+        letterSpacing: "0.08em",
+        transition: "color 0.2s",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+      }}
+    >
+      <span style={{ color: "var(--green)" }}>/</span>{display}
+    </a>
+  );
+};
+
+// ── Magnetic CTA button ────────────────────────────────────────────────
+const MagneticBtn = () => {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [hov, setHov] = useState(false);
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const el = wrapRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const radius = 80;
+      if (dist < radius) {
+        const strength = (radius - dist) / radius;
+        setPos({ x: dx * strength * 0.42, y: dy * strength * 0.42 });
+        setHov(true);
+      } else {
+        setPos({ x: 0, y: 0 });
+        setHov(false);
+      }
+    };
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
+  return (
+    <div ref={wrapRef} style={{ padding: "24px", margin: "-24px", display: "inline-block" }}>
+      <a
+        href={`mailto:${EMAIL}`}
+        className="btn-primary"
+        style={{
+          transform: `translate(${pos.x}px, ${pos.y}px)`,
+          transition: hov
+            ? "transform 0.08s ease, box-shadow 0.3s ease"
+            : "transform 0.6s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease",
+          boxShadow: hov
+            ? "0 0 36px rgba(42,107,74,0.45), 0 0 12px rgba(42,107,74,0.25)"
+            : "none",
+        }}
+      >
+        SEND A MESSAGE →
+      </a>
+    </div>
+  );
+};
+
 const Contact = () => {
   const ref = useRef<HTMLElement>(null);
   const [vis, setVis] = useState(false);
-  const [emailHov, setEmailHov] = useState(false);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -54,54 +240,12 @@ const Contact = () => {
         <div style={{ overflow: "hidden" }}><span style={{ ...slide("0.2s"), color: "var(--green)" }}>THAT MATTERS.</span></div>
       </div>
 
-      {/* Email */}
-      <div style={{ marginTop: 72 }}>
-        <a
-          href="mailto:parthghumatkarofficial@gmail.com"
-          style={{
-            display: "block", width: "fit-content",
-            fontFamily: "'Manrope', sans-serif", fontWeight: 400,
-            fontSize: "clamp(16px,2.2vw,24px)",
-            color: emailHov ? "var(--green2)" : "var(--text)",
-            textDecoration: "none", paddingBottom: 10,
-            borderBottom: `1px solid ${emailHov ? "var(--green)" : "var(--border)"}`,
-            position: "relative", transition: "color 0.2s, border-color 0.2s",
-          }}
-          onMouseEnter={() => setEmailHov(true)}
-          onMouseLeave={() => setEmailHov(false)}
-        >
-          parthghumatkarofficial@gmail.com
-          <span style={{ position: "absolute", right: -24, top: 0, opacity: emailHov ? 1 : 0, transition: "opacity 0.2s" }}>↗</span>
-        </a>
-        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--text3)", marginTop: 12, letterSpacing: "0.05em" }}>
-          Usually responds within 24 hours
-        </p>
-      </div>
+      <CopyEmail />
 
       {/* Socials */}
       <div style={{ marginTop: 60, display: "flex", gap: 36 }}>
         {SOCIALS.map((s) => (
-          <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-            style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 400, fontSize: 12, color: "var(--text2)", textDecoration: "none", letterSpacing: "0.06em", transition: "color 0.2s", display: "inline-flex", alignItems: "center", gap: 4 }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = "var(--text)";
-              const prefix = e.currentTarget.querySelector(".social-prefix") as HTMLElement;
-              if (prefix) { prefix.style.opacity = "0"; }
-              const arrow = e.currentTarget.querySelector(".social-arrow") as HTMLElement;
-              if (arrow) { arrow.style.opacity = "1"; }
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = "var(--text2)";
-              const prefix = e.currentTarget.querySelector(".social-prefix") as HTMLElement;
-              if (prefix) { prefix.style.opacity = "1"; }
-              const arrow = e.currentTarget.querySelector(".social-arrow") as HTMLElement;
-              if (arrow) { arrow.style.opacity = "0"; }
-            }}
-          >
-            <span className="social-prefix" style={{ color: "var(--green)", transition: "opacity 0.15s", position: "relative" }}>/</span>
-            <span className="social-arrow" style={{ color: "var(--green)", opacity: 0, transition: "opacity 0.15s", position: "absolute" }}>↗</span>
-            {s.label}
-          </a>
+          <ScrambleLink key={s.label} label={s.label} href={s.href} />
         ))}
       </div>
 
@@ -151,9 +295,7 @@ const Contact = () => {
       <p style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300, fontSize: 15, color: "var(--text2)" }}>
         Open to freelance projects starting now.
       </p>
-      <a href="mailto:parthghumatkarofficial@gmail.com" className="btn-primary">
-        Send a message →
-      </a>
+      <MagneticBtn />
     </div>
     </>
   );

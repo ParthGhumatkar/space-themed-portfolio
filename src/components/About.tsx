@@ -6,7 +6,6 @@ const FACTS = [
   { key: "DEPLOYS",  val: "Vercel"                       },
   { key: "AI TOOLS", val: "GPT-4 · Ollama · Groq"        },
   { key: "IDE",      val: "Windsurf + Cursor"             },
-  { key: "COLLAB",   val: "Rakshit"                      },
   { key: "OPEN TO",  val: "Freelance & Collabs"          },
 ];
 
