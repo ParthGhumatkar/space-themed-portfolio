@@ -24,7 +24,7 @@ const Cell = ({ c, delay, visible, logoColor, dataIcon }: { c: typeof CELLS[0]; 
     className="stack-cell"
     data-icon={dataIcon}
     style={{
-      background: "var(--bg2)",
+      background: "rgba(14,14,18,0.7)",
       padding: "36px 28px",
       transitionDelay: visible ? `${delay}s` : "0s",
       ...(visible ? { opacity: 1, transform: "translateY(0)" } : {}),
@@ -81,7 +81,7 @@ const Stack = () => {
   }, []);
 
   return (
-    <section id="stack" ref={ref} style={{ background: "var(--bg2)", padding: "140px 56px", borderTop: "1px solid var(--border)" }}>
+    <section id="stack" ref={ref} style={{ background: "rgba(9,9,11,0.75)", padding: "140px 56px", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 52 }}>
         <div style={{ width: 28, height: 1, background: "var(--text3)" }} />
         <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--text3)", letterSpacing: "0.2em", textTransform: "uppercase" as const }}>
@@ -94,7 +94,7 @@ const Stack = () => {
       <p style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300, fontSize: 15, color: "var(--text2)", lineHeight: 1.82, marginBottom: 56 }}>
         Tools I reach for without thinking twice.
       </p>
-      <div className="grid grid-cols-2 md:grid-cols-4" style={{ gap: 1, background: "var(--bg3)" }}>
+      <div className="grid grid-cols-2 md:grid-cols-4" style={{ gap: 1, background: "rgba(6,6,8,0.4)" }}>
         {CELLS.map((c, i) => (
           <Cell key={c.name} c={c} delay={i * 0.045} visible={vis} logoColor={logoColor} dataIcon={c.icon} />
         ))}

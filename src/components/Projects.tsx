@@ -59,7 +59,7 @@ const ProjectRow = ({ p }: { p: typeof PROJECTS[0] }) => {
         borderBottom: "1px solid var(--border)",
         padding: "44px 0",
         overflow: "hidden",
-        backgroundColor: hovered ? "var(--bg2)" : "transparent",
+        backgroundColor: hovered ? "rgba(14,14,18,0.8)" : "transparent",
         transition: "background-color 0.35s ease",
       }}
       onMouseEnter={() => setHovered(true)}
@@ -231,7 +231,7 @@ const ProjectRow = ({ p }: { p: typeof PROJECTS[0] }) => {
 };
 
 const Projects = () => (
-  <section id="work" style={{ background: "var(--bg)", padding: "0 56px 160px" }}>
+  <section id="work" style={{ background: "rgba(6,6,8,0.5)", padding: "0 56px 160px" }}>
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: 32 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
         <div style={{ width: 28, height: 1, background: "var(--text3)" }} />

@@ -32,8 +32,8 @@ const Contact = () => {
   return (
     <>
     <section id="contact" ref={ref} style={{
-      background: "var(--bg)", padding: "180px 56px",
-      borderTop: "1px solid var(--border)",
+      background: "rgba(6,6,8,0.5)", padding: "180px 56px",
+      borderTop: "1px solid rgba(255,255,255,0.04)",
       position: "relative", overflow: "hidden",
     }}>
       {/* Ghost */}
@@ -141,9 +141,9 @@ const Contact = () => {
 
     {/* Bottom CTA bar */}
     <div style={{
-      borderTop: "1px solid var(--border)",
+      borderTop: "1px solid rgba(255,255,255,0.04)",
       padding: "32px 56px",
-      background: "var(--bg2)",
+      background: "rgba(8,8,10,0.9)",
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",

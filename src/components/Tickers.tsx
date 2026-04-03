@@ -45,7 +45,7 @@ const Strip = ({
 };
 
 const Tickers = () => (
-  <div style={{ background: "var(--bg2)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+  <div style={{ background: "rgba(10,10,12,0.8)", borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
     <Strip items={T1_ITEMS} dir="left"  color="var(--text3)" sep={SEP1} />
     <div style={{ height: 1, background: "var(--border2)" }} />
     <Strip items={T2_ITEMS} dir="right" color="var(--text3)" sep={SEP2} />

@@ -1,3 +1,4 @@
+import StarField from "../components/StarField";
 import CustomCursor from "../components/CustomCursor";
 import Nav from "../components/Nav";
 import Hero from "../components/Hero";
@@ -12,9 +13,10 @@ import Footer from "../components/Footer";
 
 const Index = () => (
   <>
+    <StarField />
     <CustomCursor />
     <Nav />
-    <main>
+    <main style={{ position: "relative", zIndex: 1 }}>
       <Hero />
       <FloatingLogos />
       <StatsBar />

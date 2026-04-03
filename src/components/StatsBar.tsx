@@ -75,7 +75,7 @@ const StatsBar = () => {
   }, []);
 
   return (
-    <div ref={ref} style={{ background: "var(--bg2)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "80px 56px" }}>
+    <div ref={ref} style={{ background: "rgba(8,8,10,0.75)", borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)", padding: "80px 56px" }}>
       <div style={{ display: "flex" }}>
         {STATS.map((stat, i) => (
           <StatItem key={stat.label} stat={stat} trigger={triggered} isLast={i === STATS.length - 1} isFirst={i === 0} />

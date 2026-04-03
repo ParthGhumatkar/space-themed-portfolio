@@ -6,17 +6,17 @@
 
 /* ─── CSS Variables ─── */
 :root {
-  --bg:      #080808;
-  --bg2:     #0e0e0e;
-  --bg3:     #141414;
+  --bg:      #060608;
+  --bg2:     rgba(10,10,14,0.85);
+  --bg3:     rgba(14,14,18,0.9);
   --bg4:     #1a1a1a;
   --text:    #EDEAE0;
   --text2:   #555555;
   --text3:   #282828;
   --green:   #2A6B4A;
   --green2:  #3D9962;
-  --border:  rgba(255,255,255,0.06);
-  --border2: rgba(255,255,255,0.03);
+  --border:  rgba(255,255,255,0.04);
+  --border2: rgba(255,255,255,0.02);
 
   --space-1: 4px;  --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
   --space-5: 24px; --space-6: 32px;  --space-7: 48px;  --space-8: 64px;
@@ -155,7 +155,7 @@ body {
   pointer-events: none;
 }
 .stack-cell:hover::after { opacity: 0.4; }
-.stack-cell:hover { background: var(--bg) !important; }
+.stack-cell:hover { background: rgba(18,18,22,0.85) !important; }
 .stack-cell:hover img { opacity: 1 !important; }
 
 /* ─── Primary Button ─── */

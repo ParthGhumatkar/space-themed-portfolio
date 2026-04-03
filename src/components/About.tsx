@@ -28,7 +28,7 @@ const About = () => {
       id="about"
       ref={ref}
       className={`reveal${vis ? " revealed" : ""}`}
-      style={{ background: "var(--bg)", padding: "160px 56px" }}
+      style={{ background: "rgba(6,6,8,0.5)", padding: "160px 56px" }}
     >
       <div className="flex flex-col md:flex-row" style={{ gap: 72 }}>
 

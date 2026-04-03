@@ -24,7 +24,7 @@ const Hero = () => {
   });
 
   return (
-    <section id="hero" style={{ position: "relative", height: "100vh", minHeight: "100vh", background: "var(--bg)", overflow: "hidden", margin: 0, padding: 0 }}>
+    <section id="hero" style={{ position: "relative", height: "100vh", minHeight: "100vh", background: "transparent", overflow: "hidden", margin: 0, padding: 0 }}>
 
       {/* Dot grid */}
       <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, var(--bg4) 1px, transparent 1px)", backgroundSize: "30px 30px", zIndex: 0, pointerEvents: "none", ...fade(0, 0.8) }} />
