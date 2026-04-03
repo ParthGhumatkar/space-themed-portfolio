@@ -64,7 +64,7 @@ const SocialBtn = ({ s }: { s: typeof SOCIALS[0] }) => {
 };
 
 const Footer = () => (
-  <footer style={{ background: "var(--bg)", borderTop: "1px solid var(--border)" }}>
+  <footer style={{ background: "rgba(8,8,10,0.9)", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
     {/* Top row */}
     <div style={{ padding: "32px 56px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
       <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 18, color: "var(--text)", letterSpacing: "0.05em" }}>
