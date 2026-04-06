@@ -1,9 +1,16 @@
-import { useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 type Theme = 'dark' | 'light';
 
-export function useTheme() {
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+interface ThemeContextValue {
+  theme: Theme;
+  toggle: () => void;
+}
+
+const ThemeContext = createContext<ThemeContextValue>({ theme: 'dark', toggle: () => {} });
+
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === 'undefined') return 'dark';
     const s = localStorage.getItem('theme');
     if (s === 'light' || s === 'dark') return s;
@@ -16,5 +23,9 @@ export function useTheme() {
   }, [theme]);
 
   const toggle = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
-  return { theme, toggle };
+  return <ThemeContext.Provider value={{ theme, toggle }}>{children}</ThemeContext.Provider>;
+}
+
+export function useTheme() {
+  return useContext(ThemeContext);
 }

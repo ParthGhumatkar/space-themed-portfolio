@@ -6,10 +6,17 @@ const Hero = () => {
   const { theme } = useTheme();
   const logoColor = theme === "dark" ? "EDEAE0" : "0A0A0A";
   const [up, setUp] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
 
   useEffect(() => {
     const t = setTimeout(() => setUp(true), 50);
     return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    const h = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", h, { passive: true });
+    return () => window.removeEventListener("resize", h);
   }, []);
 
   const fade = (delay: number, targetOpacity = 1): React.CSSProperties => ({
@@ -47,10 +54,17 @@ const Hero = () => {
       </span>
 
       {/* Main content */}
-      <div style={{ position: "absolute", bottom: 64, left: 56, zIndex: 2, maxWidth: 520 }}>
+      <div style={{
+        position: "absolute",
+        bottom: isMobile ? 32 : 64,
+        left: isMobile ? 20 : 56,
+        right: isMobile ? 20 : "auto",
+        zIndex: 2,
+        maxWidth: isMobile ? "none" : 520,
+      }}>
 
         {/* Headline */}
-        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(88px,12.5vw,158px)", lineHeight: 0.88, letterSpacing: "-0.5px" }}>
+        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(52px, 11vw, 158px)", lineHeight: 0.88, letterSpacing: "-0.5px" }}>
           <div style={{ overflow: "hidden" }}>
             <span style={{ ...slide("0.45s"), color: "var(--text)" }}>FROM IDEA</span>
           </div>
@@ -65,7 +79,7 @@ const Hero = () => {
         </div>
 
         {/* Subtext */}
-        <p style={{ marginTop: 28, fontFamily: "'Manrope', sans-serif", fontWeight: 300, fontSize: 15, color: "var(--text2)", maxWidth: 340, lineHeight: 1.78, opacity: up ? 1 : 0, transform: up ? "translateY(0)" : "translateY(12px)", transition: "opacity 0.5s ease 1.2s, transform 0.5s ease 1.2s" }}>
+        <p style={{ marginTop: 28, fontFamily: "'Manrope', sans-serif", fontWeight: 300, fontSize: 15, color: "var(--text2)", maxWidth: isMobile ? "100%" : 340, lineHeight: 1.78, opacity: up ? 1 : 0, transform: up ? "translateY(0)" : "translateY(12px)", transition: "opacity 0.5s ease 1.2s, transform 0.5s ease 1.2s" }}>
           Building full-stack products with AI at the core. Two live. Always shipping.
         </p>
 
@@ -73,7 +87,7 @@ const Hero = () => {
         <span style={{ display: "block", width: 40, height: 1, background: "rgba(42,107,74,0.4)", margin: "22px 0", opacity: up ? 1 : 0, transition: "opacity 0.5s ease 1.28s" }} />
 
         {/* CTAs */}
-        <div style={{ display: "flex", alignItems: "center", gap: 24, opacity: up ? 1 : 0, transform: up ? "translateY(0)" : "translateY(12px)", transition: "opacity 0.5s ease 1.35s, transform 0.5s ease 1.35s" }}>
+        <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "flex-start", gap: isMobile ? 12 : 24, opacity: up ? 1 : 0, transform: up ? "translateY(0)" : "translateY(12px)", transition: "opacity 0.5s ease 1.35s, transform 0.5s ease 1.35s" }}>
           <button
             onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
             style={{ display: "inline-flex", alignItems: "center", gap: 10, fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: "0.12em", background: "var(--green)", color: "var(--bg)", border: "none", padding: "13px 28px", borderRadius: 0, transition: "background 0.2s, transform 0.2s" }}

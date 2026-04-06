@@ -7,7 +7,7 @@ const STATS = [
   { end: null, label: "IDEAS LEFT TO BUILD",            suffix: "",  symbol: "\u221e"  },
 ];
 
-const StatItem = ({ stat, trigger, isLast, isFirst }: { stat: typeof STATS[0]; trigger: boolean; isLast: boolean; isFirst: boolean }) => {
+const StatItem = ({ stat, trigger, isLast, isFirst, index, isMobile }: { stat: typeof STATS[0]; trigger: boolean; isLast: boolean; isFirst: boolean; index: number; isMobile: boolean }) => {
   const [count, setCount] = useState(0);
   const [flash, setFlash] = useState(false);
   const [done, setDone] = useState(false);
@@ -26,11 +26,13 @@ const StatItem = ({ stat, trigger, isLast, isFirst }: { stat: typeof STATS[0]; t
     requestAnimationFrame(step);
   }, [trigger, stat.end]);
 
+  const noBorderRight = isLast || (isMobile && index % 2 === 1);
+
   return (
-    <div style={{ flex: 1, padding: "0 48px", borderRight: isLast ? "none" : "1px solid var(--border)" }}>
+    <div style={{ padding: isMobile ? "0 20px" : "0 48px", borderRight: noBorderRight ? "none" : "1px solid var(--border)" }}>
       <div style={{
         fontFamily: "'Bebas Neue', sans-serif",
-        fontSize: "clamp(72px,8vw,112px)",
+        fontSize: isMobile ? "clamp(52px,12vw,72px)" : "clamp(72px,9vw,120px)",
         color: flash ? "#fff" : "var(--text)",
         lineHeight: 1,
         transition: flash ? "color 0.4s ease" : "none",
@@ -62,6 +64,17 @@ const StatItem = ({ stat, trigger, isLast, isFirst }: { stat: typeof STATS[0]; t
 const StatsBar = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [triggered, setTriggered] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  const [isTablet, setIsTablet] = useState(() => window.innerWidth < 1024);
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth < 1024);
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     const el = ref.current;
@@ -74,11 +87,17 @@ const StatsBar = () => {
     return () => obs.disconnect();
   }, []);
 
+  const padding = isMobile ? "48px 20px" : isTablet ? "64px 40px" : "88px 56px";
+
   return (
-    <div ref={ref} style={{ background: "rgba(8,8,10,0.75)", borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)", padding: "80px 56px" }}>
-      <div style={{ display: "flex" }}>
+    <div ref={ref} style={{ background: "rgba(8,8,10,0.4)", borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)", padding }}>
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+        gap: isMobile ? "32px 0" : 0,
+      }}>
         {STATS.map((stat, i) => (
-          <StatItem key={stat.label} stat={stat} trigger={triggered} isLast={i === STATS.length - 1} isFirst={i === 0} />
+          <StatItem key={stat.label} stat={stat} trigger={triggered} isLast={i === STATS.length - 1} isFirst={i === 0} index={i} isMobile={isMobile} />
         ))}
       </div>
     </div>

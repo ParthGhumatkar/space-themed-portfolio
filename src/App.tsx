@@ -1,9 +1,12 @@
-import { useTheme } from "./hooks/useTheme";
+import { ThemeProvider } from "./hooks/useTheme";
 import Index from "./pages/Index";
 
 function App() {
-  useTheme();
-  return <Index />;
+  return (
+    <ThemeProvider>
+      <Index />
+    </ThemeProvider>
+  );
 }
 
 export default App;

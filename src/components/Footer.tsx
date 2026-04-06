@@ -103,28 +103,66 @@ const SocialBtn = ({ s }: { s: typeof SOCIALS[0] }) => {
   );
 };
 
-const Footer = () => (
-  <footer style={{ background: "rgba(8,8,10,0.9)", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
-    {/* Top row */}
-    <div style={{ padding: "32px 56px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-      <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 18, color: "var(--text)", letterSpacing: "0.05em" }}>
-        PARTH GHUMATKAR
-      </span>
-      <div style={{ display: "flex", gap: 8 }}>
-        {SOCIALS.map((s) => <SocialBtn key={s.label} s={s} />)}
+const Footer = () => {
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  const [isTablet, setIsTablet] = useState(() => window.innerWidth < 1024);
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth < 1024);
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const topPad    = isMobile ? "24px 20px" : isTablet ? "28px 40px" : "32px 56px";
+  const bottomPad = isMobile ? "16px 20px" : isTablet ? "16px 40px" : "16px 56px";
+  const divMargin = isMobile ? "0 20px"    : isTablet ? "0 40px"    : "0 56px";
+
+  return (
+    <footer style={{ background: "rgba(8,8,10,0.65)", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+      {/* Top row */}
+      <div style={{
+        padding: topPad,
+        display: "flex",
+        alignItems: isMobile ? "center" : "center",
+        justifyContent: isMobile ? "center" : "space-between",
+        flexDirection: isMobile ? "column" : "row",
+        gap: isMobile ? 12 : 0,
+        textAlign: isMobile ? "center" : "left",
+      }}>
+        <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 18, color: "var(--text)", letterSpacing: "0.05em" }}>
+          PARTH GHUMATKAR
+        </span>
+        <div style={{ display: "flex", gap: 8 }}>
+          {SOCIALS.map((s) => <SocialBtn key={s.label} s={s} />)}
+        </div>
       </div>
-    </div>
 
-    {/* Divider */}
-    <div style={{ height: 1, background: "var(--border2)", margin: "0 56px" }} />
+      {/* Divider */}
+      <div style={{ height: 1, background: "var(--border2)", margin: divMargin }} />
 
-    {/* Bottom row */}
-    <div style={{ padding: "16px 56px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-      <span style={monoSm}>© 2025 · ALL RIGHTS RESERVED</span>
-      <span style={{ ...monoSm, display: "none" as const }} className="hidden md:block">BUILT WITH NEXT.JS · DEPLOYED ON VERCEL</span>
-      <ISTClock />
-    </div>
-  </footer>
-);
+      {/* Bottom row */}
+      <div style={{
+        padding: bottomPad,
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        justifyContent: isMobile ? "center" : "space-between",
+        alignItems: "center",
+        gap: isMobile ? 8 : 0,
+        textAlign: isMobile ? "center" : "left",
+      }}>
+        <span style={monoSm}>© 2025 · ALL RIGHTS RESERVED</span>
+        {!isMobile && (
+          <span style={monoSm} className={isTablet ? "hidden" : ""}>
+            BUILT WITH NEXT.JS · DEPLOYED ON VERCEL
+          </span>
+        )}
+        <ISTClock />
+      </div>
+    </footer>
+  );
+};
 
 export default Footer;

@@ -47,6 +47,7 @@ const GalaxyCanvas = () => {
     mobileRef.current = window.innerWidth < 768;
 
     const setup = () => {
+      mobileRef.current = window.innerWidth < 768;
       const dpr   = window.devicePixelRatio || 1;
       const w     = container.clientWidth;
       const h     = container.clientHeight;
@@ -57,8 +58,8 @@ const GalaxyCanvas = () => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const mob         = mobileRef.current;
-      const starCount   = mob ? 100 : 400;
-      const spiralCount = mob ? 160 : 480;
+      const starCount   = mob ? 80 : 400;
+      const spiralCount = mob ? 120 : 480;
 
       starsRef.current = Array.from({ length: starCount }, () => ({
         x: Math.random() * w, y: Math.random() * h,
@@ -85,6 +86,13 @@ const GalaxyCanvas = () => {
 
       cxRef.current = w * 0.68;
       cyRef.current = h * 0.48;
+
+      if (mob) {
+        const mobileRadii = [70, 85, 60];
+        projectsRef.current.forEach((p, i) => { p.radius = mobileRadii[i] ?? p.radius; });
+      } else {
+        PROJECT_DATA.forEach((d, i) => { projectsRef.current[i].radius = d.radius; });
+      }
     };
 
     setup();
@@ -117,8 +125,8 @@ const GalaxyCanvas = () => {
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
         ctx.fillStyle = dark
-          ? `rgba(237,234,224,${(a * 0.6).toFixed(3)})`
-          : `rgba(0,0,0,${(a * 0.09).toFixed(3)})`;
+          ? `rgba(237,234,224,${(a * 0.3).toFixed(3)})`
+          : `rgba(220,210,255,${(a * 0.28).toFixed(3)})`;
         ctx.fill();
       });
 
@@ -130,7 +138,7 @@ const GalaxyCanvas = () => {
         const a  = dark ? n.alpha : n.alpha * 0.5;
         ctx.beginPath();
         ctx.arc(nx, ny, n.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(42,107,74,${a.toFixed(3)})`;
+        ctx.fillStyle = dark ? `rgba(42,107,74,${a.toFixed(3)})` : `rgba(124,106,247,${a.toFixed(3)})`;
         ctx.fill();
       });
 
@@ -146,14 +154,14 @@ const GalaxyCanvas = () => {
         if (p.arm === 0) {
           ctx.arc(px, py, p.size, 0, Math.PI * 2);
           ctx.fillStyle = dark
-            ? `rgba(42,107,74,${a.toFixed(3)})`
-            : `rgba(42,107,74,${(a * 0.7).toFixed(3)})`;
+            ? `rgba(42,107,74,${(a * 0.5).toFixed(3)})`
+            : `rgba(124,106,247,${(a * 0.35).toFixed(3)})`;
         } else {
           ctx.arc(px, py, p.size * 0.8, 0, Math.PI * 2);
-          const sa = dark ? a * 0.4 : a * 0.3;
+          const sa = dark ? a * 0.2 : a * 0.15;
           ctx.fillStyle = dark
             ? `rgba(160,190,160,${sa.toFixed(3)})`
-            : `rgba(80,120,80,${sa.toFixed(3)})`;
+            : `rgba(180,160,255,${sa.toFixed(3)})`;
         }
         ctx.fill();
       });
@@ -162,26 +170,26 @@ const GalaxyCanvas = () => {
       [142, 198, 165].forEach(r => {
         ctx.beginPath();
         ctx.ellipse(cx, cy, r, r * 0.4, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = dark ? "rgba(42,107,74,0.06)" : "rgba(42,107,74,0.09)";
+        ctx.strokeStyle = dark ? "rgba(42,107,74,0.06)" : "rgba(124,106,247,0.1)";
         ctx.lineWidth = 0.5;
         ctx.stroke();
       });
 
       // ─── LAYER 5: Core ───────────────────────────────────────────
       const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 32);
-      grad.addColorStop(0, dark ? "rgba(42,107,74,0.4)" : "rgba(42,107,74,0.25)");
+      grad.addColorStop(0, dark ? "rgba(42,107,74,0.4)" : "rgba(124,106,247,0.3)");
       grad.addColorStop(1, "rgba(0,0,0,0)");
       ctx.beginPath(); ctx.arc(cx, cy, 32, 0, Math.PI * 2);
       ctx.fillStyle = grad; ctx.fill();
 
       ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(42,107,74,0.9)"; ctx.fill();
+      ctx.fillStyle = dark ? "rgba(42,107,74,0.9)" : "rgba(124,106,247,0.9)"; ctx.fill();
 
       ctx.beginPath(); ctx.arc(cx, cy, 2, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(200,240,200,0.8)"; ctx.fill();
+      ctx.fillStyle = dark ? "rgba(200,240,200,0.8)" : "rgba(220,210,255,0.8)"; ctx.fill();
 
       // ─── LAYER 6: Project nodes ───────────────────────────────────
-      const labelColor = dark ? "#EDEAE0" : "#0A0A0A";
+      const labelColor = dark ? "#EDEAE0" : "#E8E4FF";
 
       projectsRef.current.forEach(proj => {
         if (!proj.hovered) proj.angle += proj.orbitSpeed * 60;
@@ -192,21 +200,23 @@ const GalaxyCanvas = () => {
         const tSize = proj.hovered ? 14 : 8;
         proj.hoveredScale += (tSize - proj.hoveredScale) * 0.15;
 
+        const nAccent  = dark ? "42,107,74" : "124,106,247";
+        const nCoreDot = dark ? "rgba(200,240,200,0.9)" : "rgba(220,210,255,0.9)";
         // Outer halo
         ctx.beginPath(); ctx.arc(nx, ny, 22, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(42,107,74,0.05)"; ctx.fill();
+        ctx.fillStyle = `rgba(${nAccent},0.05)`; ctx.fill();
 
         // Inner halo
         ctx.beginPath(); ctx.arc(nx, ny, 12, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(42,107,74,0.12)"; ctx.fill();
+        ctx.fillStyle = `rgba(${nAccent},0.12)`; ctx.fill();
 
         // Node body
         ctx.beginPath(); ctx.arc(nx, ny, proj.hoveredScale, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(42,107,74,0.8)"; ctx.fill();
+        ctx.fillStyle = `rgba(${nAccent},0.8)`; ctx.fill();
 
         // Core dot
         ctx.beginPath(); ctx.arc(nx, ny, 3, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(200,240,200,0.9)"; ctx.fill();
+        ctx.fillStyle = nCoreDot; ctx.fill();
 
         const onRight = nx > cx;
         const labelX  = onRight ? nx + 14 : nx - 14;
@@ -216,23 +226,25 @@ const GalaxyCanvas = () => {
           const cardX = onRight ? nx + 8 : nx - 148;
           const cardY = ny - 32;
 
-          ctx.fillStyle = dark ? "rgba(10,10,10,0.88)" : "rgba(245,242,235,0.92)";
+          ctx.fillStyle = dark ? "rgba(7,7,9,0.92)" : "rgba(10,10,26,0.92)";
           ctx.beginPath(); ctx.rect(cardX, cardY, 140, 64); ctx.fill();
-          ctx.strokeStyle = "rgba(42,107,74,0.3)"; ctx.lineWidth = 0.5; ctx.stroke();
+          const cardAccent = dark ? "rgba(42,107,74,0.35)" : "rgba(124,106,247,0.4)";
+          const cardSubCol = dark ? "rgba(42,107,74,0.9)"   : "rgba(124,106,247,0.9)";
+          ctx.strokeStyle = cardAccent; ctx.lineWidth = 0.5; ctx.stroke();
 
           ctx.textAlign   = "left";
           ctx.globalAlpha = 0.9;
 
           ctx.font      = "bold 13px 'Bebas Neue', sans-serif";
-          ctx.fillStyle = dark ? "#EDEAE0" : "#0A0A0A";
+          ctx.fillStyle = dark ? "#EDEAE0" : "#E8E4FF";
           ctx.fillText(proj.name, cardX + 10, cardY + 18);
 
           ctx.font      = "9px 'IBM Plex Mono', monospace";
-          ctx.fillStyle = "rgba(42,107,74,0.8)";
+          ctx.fillStyle = cardSubCol;
           ctx.fillText(proj.sub, cardX + 10, cardY + 33);
 
           ctx.font      = "10px 'IBM Plex Mono', monospace";
-          ctx.fillStyle = "#2A6B4A";
+          ctx.fillStyle = dark ? "#2A6B4A" : "#7C6AF7";
           ctx.fillText("Visit →", cardX + 10, cardY + 52);
 
           ctx.globalAlpha = 1;
@@ -247,7 +259,7 @@ const GalaxyCanvas = () => {
 
             ctx.globalAlpha = 0.6;
             ctx.font      = "10px 'IBM Plex Mono', monospace";
-            ctx.fillStyle = "#2A6B4A";
+            ctx.fillStyle = dark ? "#2A6B4A" : "#7C6AF7";
             ctx.fillText(proj.sub, labelX, ny + 14);
 
             ctx.globalAlpha = 1;

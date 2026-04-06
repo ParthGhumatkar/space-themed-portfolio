@@ -95,14 +95,27 @@ const Bubble = ({
   );
 };
 
+const MOBILE_VISIBLE = new Set(["Next.js", "TypeScript", "Python", "Anthropic", "GitHub"]);
+
 const FloatingLogos = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [offsets, setOffsets] = useState<{ x: number; y: number }[]>(
     BUBBLES.map(() => ({ x: 0, y: 0 }))
   );
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  const [isTablet, setIsTablet] = useState(() => window.innerWidth < 1024);
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const logoColor = isDark ? "EDEAE0" : "1a1a1a";
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth < 1024);
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -138,19 +151,27 @@ const FloatingLogos = () => {
     };
   }, []);
 
+  const sectionHeight = isMobile ? 280 : isTablet ? 360 : 480;
+
   return (
     <div ref={sectionRef} style={{
-      position: "relative", width: "100%", height: 480,
-      backgroundColor: "rgba(6,6,8,0.6)",
+      position: "relative", width: "100%", height: sectionHeight,
+      backgroundColor: "rgba(6,6,8,0.35)",
       borderTop: "1px solid rgba(255,255,255,0.04)",
       borderBottom: "1px solid rgba(255,255,255,0.04)",
       overflow: "hidden",
     }}>
-      {BUBBLES.map((b, i) => (
-        <div key={b.name + b.left} className={i >= 8 ? "hidden md:block" : ""}>
-          <Bubble b={b} offset={offsets[i]} logoColor={logoColor} isDark={isDark} />
-        </div>
-      ))}
+      {BUBBLES.map((b, i) => {
+        if (isMobile && !MOBILE_VISIBLE.has(b.name)) return null;
+        const scaledB = isMobile
+          ? { ...b, size: Math.round(b.size * 0.6), imgSize: Math.round(b.imgSize * 0.6) }
+          : b;
+        return (
+          <div key={b.name + b.left}>
+            <Bubble b={scaledB} offset={offsets[i]} logoColor={logoColor} isDark={isDark} />
+          </div>
+        );
+      })}
       <div style={{
         position: "absolute", inset: 0,
         background: "radial-gradient(ellipse 80% 100% at center, transparent 40%, rgba(6,6,8,0.5) 100%)",

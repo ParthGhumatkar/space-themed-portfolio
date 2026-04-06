@@ -12,6 +12,17 @@ const FACTS = [
 const About = () => {
   const ref = useRef<HTMLElement>(null);
   const [vis, setVis] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  const [isTablet, setIsTablet] = useState(() => window.innerWidth < 1024);
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth < 1024);
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -27,7 +38,7 @@ const About = () => {
       id="about"
       ref={ref}
       className={`reveal${vis ? " revealed" : ""}`}
-      style={{ background: "rgba(6,6,8,0.5)", padding: "160px 56px" }}
+      style={{ background: "rgba(6,6,8,0.3)", padding: isMobile ? "72px 20px" : isTablet ? "100px 40px" : "160px 56px" }}
     >
       <div className="flex flex-col md:flex-row" style={{ gap: 72 }}>
 
@@ -38,19 +49,19 @@ const About = () => {
             <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--text3)", letterSpacing: "0.2em", textTransform: "uppercase" as const }}>ABOUT</span>
           </div>
 
-          <p style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300, fontSize: 22, color: "var(--text)", lineHeight: 1.65, letterSpacing: "0.008em", maxWidth: 500 }}>
+          <p style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300, fontSize: isMobile ? 18 : 22, color: "var(--text)", lineHeight: 1.65, letterSpacing: "0.008em", maxWidth: 500 }}>
             I wrote my first line of code at 11.
             Been shipping ever since.
           </p>
 
-          <p style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300, fontSize: 15, color: "var(--text2)", lineHeight: 1.82, letterSpacing: "0.008em", maxWidth: 500, marginTop: 28 }}>
+          <p style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300, fontSize: isMobile ? 14 : 15, color: "var(--text2)", lineHeight: 1.82, letterSpacing: "0.008em", maxWidth: 500, marginTop: 28 }}>
             I build full-stack SaaS products that solve real problems —
             seoreport, an AI-powered SEO audit tool, and Swatantra,
             a booking platform for India's independent tradespeople.
             Both live. Both used.
           </p>
 
-          <p style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300, fontSize: 15, color: "var(--text2)", lineHeight: 1.82, letterSpacing: "0.008em", maxWidth: 500, marginTop: 16 }}>
+          <p style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300, fontSize: isMobile ? 14 : 15, color: "var(--text2)", lineHeight: 1.82, letterSpacing: "0.008em", maxWidth: 500, marginTop: 16 }}>
             I leverage AI across the full stack —
             from GPT-4 prompt engineering to local Ollama models.
             The stack doesn't scare me. Shipping does not either.

@@ -10,7 +10,7 @@ const EMAIL = "parthghumatkarofficial@gmail.com";
 const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
 
 // ── Copy-to-clipboard email with mouse-tracking tooltip ───────────────
-const CopyEmail = () => {
+const CopyEmail = ({ isMobile }: { isMobile: boolean }) => {
   const [copied, setCopied] = useState(false);
   const [show,   setShow]   = useState(false);
   const [flash,  setFlash]  = useState(false);
@@ -43,12 +43,13 @@ const CopyEmail = () => {
       <span style={{
         display: "block",
         fontFamily: "'Manrope', sans-serif", fontWeight: 400,
-        fontSize: "clamp(16px,2.2vw,24px)",
+        fontSize: isMobile ? 14 : "clamp(15px,2vw,22px)",
         color: flash ? "var(--green2)" : "var(--text)",
         paddingBottom: 10,
         borderBottom: `1px solid ${show ? "var(--green)" : "var(--border)"}`,
         transition: "color 0.2s, border-color 0.2s",
         userSelect: "none" as const,
+        wordBreak: isMobile ? "break-all" : "normal",
       }}>
         {EMAIL}
         <span style={{ marginLeft: 10, opacity: show ? 1 : 0, transition: "opacity 0.2s" }}>↗</span>
@@ -86,7 +87,7 @@ const CopyEmail = () => {
 };
 
 // ── Letter-scramble social link ────────────────────────────────────────
-const ScrambleLink = ({ label, href }: { label: string; href: string }) => {
+const ScrambleLink = ({ label, href, fontSize = 13 }: { label: string; href: string; fontSize?: number }) => {
   const [display, setDisplay] = useState(label.toUpperCase());
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const frameRef = useRef(0);
@@ -127,7 +128,7 @@ const ScrambleLink = ({ label, href }: { label: string; href: string }) => {
       onMouseLeave={reset}
       style={{
         fontFamily: "'IBM Plex Mono', monospace",
-        fontSize: 13,
+        fontSize,
         color: "var(--text2)",
         textDecoration: "none",
         letterSpacing: "0.08em",
@@ -196,6 +197,17 @@ const MagneticBtn = () => {
 const Contact = () => {
   const ref = useRef<HTMLElement>(null);
   const [vis, setVis] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  const [isTablet, setIsTablet] = useState(() => window.innerWidth < 1024);
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth < 1024);
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -209,7 +221,7 @@ const Contact = () => {
   const slide = (delay: string): React.CSSProperties => ({
     display: "block",
     fontFamily: "'Bebas Neue', sans-serif",
-    fontSize: "clamp(56px,9vw,128px)",
+    fontSize: isMobile ? "clamp(44px,12vw,72px)" : "clamp(52px,9vw,124px)",
     lineHeight: 0.88,
     transform: vis ? "translateY(0)" : "translateY(105%)",
     transition: `transform 0.85s cubic-bezier(0.16,1,0.3,1) ${delay}`,
@@ -218,7 +230,7 @@ const Contact = () => {
   return (
     <>
     <section id="contact" ref={ref} style={{
-      background: "rgba(6,6,8,0.5)", padding: "180px 56px",
+      background: "rgba(6,6,8,0.3)", padding: isMobile ? "80px 20px" : isTablet ? "120px 40px" : "180px 56px",
       borderTop: "1px solid rgba(255,255,255,0.04)",
       position: "relative", overflow: "hidden",
     }}>
@@ -240,12 +252,12 @@ const Contact = () => {
         <div style={{ overflow: "hidden" }}><span style={{ ...slide("0.2s"), color: "var(--green)" }}>THAT MATTERS.</span></div>
       </div>
 
-      <CopyEmail />
+      <CopyEmail isMobile={isMobile} />
 
       {/* Socials */}
-      <div style={{ marginTop: 60, display: "flex", gap: 36 }}>
+      <div style={{ marginTop: isMobile ? 36 : 60, display: "flex", gap: isMobile ? 20 : 36, flexWrap: "wrap" }}>
         {SOCIALS.map((s) => (
-          <ScrambleLink key={s.label} label={s.label} href={s.href} />
+          <ScrambleLink key={s.label} label={s.label} href={s.href} fontSize={isMobile ? 11 : 13} />
         ))}
       </div>
 
@@ -286,11 +298,13 @@ const Contact = () => {
     {/* Bottom CTA bar */}
     <div style={{
       borderTop: "1px solid rgba(255,255,255,0.04)",
-      padding: "32px 56px",
-      background: "rgba(8,8,10,0.9)",
+      padding: isMobile ? "24px 20px" : isTablet ? "28px 40px" : "32px 56px",
+      background: "rgba(8,8,10,0.55)",
       display: "flex",
+      flexDirection: isMobile ? "column" : "row",
       justifyContent: "space-between",
-      alignItems: "center",
+      alignItems: isMobile ? "flex-start" : "center",
+      gap: isMobile ? 16 : 0,
     }}>
       <p style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300, fontSize: 15, color: "var(--text2)" }}>
         Open to freelance projects starting now.

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const PROJECTS = [
   {
@@ -27,7 +27,7 @@ const PROJECTS = [
   },
 ];
 
-const ProjectRow = ({ p }: { p: typeof PROJECTS[0] }) => {
+const ProjectRow = ({ p, isMobile, isTablet }: { p: typeof PROJECTS[0]; isMobile: boolean; isTablet: boolean }) => {
   const [hovered, setHovered]  = useState(false);
   const rowRef    = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -57,9 +57,9 @@ const ProjectRow = ({ p }: { p: typeof PROJECTS[0] }) => {
       style={{
         position: "relative",
         borderBottom: "1px solid var(--border)",
-        padding: "44px 0",
+        padding: isMobile ? "32px 20px" : isTablet ? "40px 40px" : "52px 56px",
         overflow: "hidden",
-        backgroundColor: hovered ? "rgba(14,14,18,0.8)" : "transparent",
+        backgroundColor: hovered ? "rgba(14,14,18,0.45)" : "transparent",
         transition: "background-color 0.35s ease",
       }}
       onMouseEnter={() => setHovered(true)}
@@ -78,7 +78,7 @@ const ProjectRow = ({ p }: { p: typeof PROJECTS[0] }) => {
       )}
       {/* Ghost number */}
       <span
-        className="hidden md:block"
+        className="hidden lg:block"
         style={{
           position: "absolute",
           right: -8,
@@ -125,7 +125,7 @@ const ProjectRow = ({ p }: { p: typeof PROJECTS[0] }) => {
           </div>
           <h3 style={{
             fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: "clamp(36px,4.5vw,60px)",
+            fontSize: isMobile ? 28 : isTablet ? 32 : "clamp(34px,4vw,58px)",
             lineHeight: 0.95,
             color: "var(--text)",
             marginTop: 10,
@@ -146,7 +146,7 @@ const ProjectRow = ({ p }: { p: typeof PROJECTS[0] }) => {
         </div>
 
         {/* Col B — 280px shimmer placeholder */}
-        <div className="hidden md:block w-[280px] flex-shrink-0 px-[40px]">
+        <div className="hidden lg:block w-[280px] flex-shrink-0 px-[40px]">
           <div style={{ position: "relative", aspectRatio: "16/9", width: "100%" }}>
             <div className="shimmer" style={{ position: "absolute", inset: 0 }} />
             <span style={{
@@ -230,21 +230,38 @@ const ProjectRow = ({ p }: { p: typeof PROJECTS[0] }) => {
   );
 };
 
-const Projects = () => (
-  <section id="work" style={{ background: "rgba(6,6,8,0.5)", padding: "0 56px 160px" }}>
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: 32 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-        <div style={{ width: 28, height: 1, background: "var(--text3)" }} />
-        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--text3)", letterSpacing: "0.2em", textTransform: "uppercase" as const }}>SELECTED WORK</span>
-      </div>
-      <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--text3)" }}>(3 Projects)</span>
-    </div>
-    <div style={{ borderBottom: "1px solid var(--border)" }} />
+const Projects = () => {
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  const [isTablet, setIsTablet] = useState(() => window.innerWidth < 1024);
 
-    {PROJECTS.map((p) => (
-      <ProjectRow key={p.num} p={p} />
-    ))}
-  </section>
-);
+  useEffect(() => {
+    const onResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth < 1024);
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const sectionPad = isMobile ? "0 0 80px" : isTablet ? "0 0 120px" : "0 0 160px";
+  const headerPad  = isMobile ? "0 20px 28px" : isTablet ? "0 40px 28px" : "0 56px 32px";
+
+  return (
+    <section id="work" style={{ background: "rgba(6,6,8,0.3)", padding: sectionPad }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: headerPad }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ width: 28, height: 1, background: "var(--text3)" }} />
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--text3)", letterSpacing: "0.2em", textTransform: "uppercase" as const }}>SELECTED WORK</span>
+        </div>
+        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--text3)" }}>(3 Projects)</span>
+      </div>
+      <div style={{ borderBottom: "1px solid var(--border)" }} />
+
+      {PROJECTS.map((p) => (
+        <ProjectRow key={p.num} p={p} isMobile={isMobile} isTablet={isTablet} />
+      ))}
+    </section>
+  );
+};
 
 export default Projects;

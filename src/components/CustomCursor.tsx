@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useTheme } from "../hooks/useTheme";
 
 const CustomCursor = () => {
   const dotRef  = useRef<HTMLDivElement>(null);
@@ -6,7 +7,11 @@ const CustomCursor = () => {
   const pos     = useRef({ x: -200, y: -200 });
   const last    = useRef({ x: -200, y: -200 });
   const ring    = useRef({ x: -200, y: -200 });
-  const hov     = useRef(false);
+  const hov       = useRef(false);
+  const { theme }  = useTheme();
+  const themeRef   = useRef(theme);
+
+  useEffect(() => { themeRef.current = theme; }, [theme]);
 
   useEffect(() => {
     let raf: number;
@@ -47,7 +52,10 @@ const CustomCursor = () => {
         ringRef.current.style.width       = `${size}px`;
         ringRef.current.style.height      = `${size}px`;
         ringRef.current.style.transform   = `translate(${ring.current.x - half}px, ${ring.current.y - half}px) scaleX(${sx}) scaleY(${sy})`;
-        ringRef.current.style.borderColor = isHov ? "rgba(42,107,74,0.7)" : "rgba(42,107,74,0.4)";
+        const isDark    = themeRef.current === "dark";
+        const dotColor  = isDark ? "rgba(42,107,74,0.7)"  : "rgba(124,106,247,0.7)";
+        const ringColor = isDark ? "rgba(42,107,74,0.4)"  : "rgba(124,106,247,0.45)";
+        ringRef.current.style.borderColor = isHov ? dotColor : ringColor;
         ringRef.current.style.transition  = speed < 1 ? "transform 0.4s ease, border-color 0.15s, width 0.15s, height 0.15s" : "border-color 0.15s, width 0.15s, height 0.15s";
       }
 
@@ -69,15 +77,15 @@ const CustomCursor = () => {
 
   return (
     <>
-      <div ref={dotRef} style={{
+      <div id="cursor-dot" ref={dotRef} style={{
         position: "fixed", top: 0, left: 0,
         width: 5, height: 5, borderRadius: "50%",
-        backgroundColor: "var(--green)",
+        backgroundColor: theme === "dark" ? "#2A6B4A" : "#7C6AF7",
         pointerEvents: "none", zIndex: 10000,
         willChange: "transform",
         transition: "opacity 0.15s ease",
       }} />
-      <div ref={ringRef} style={{
+      <div id="cursor-ring" ref={ringRef} style={{
         position: "fixed", top: 0, left: 0,
         width: 36, height: 36, borderRadius: "50%",
         border: "1px solid rgba(42,107,74,0.4)",

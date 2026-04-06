@@ -19,13 +19,13 @@ const OpenAISVG = () => (
   </svg>
 );
 
-const Cell = ({ c, delay, visible, logoColor, dataIcon }: { c: typeof CELLS[0]; delay: number; visible: boolean; logoColor: string; dataIcon: string }) => (
+const Cell = ({ c, delay, visible, logoColor, dataIcon, cellPad }: { c: typeof CELLS[0]; delay: number; visible: boolean; logoColor: string; dataIcon: string; cellPad: string }) => (
   <div
     className="stack-cell"
     data-icon={dataIcon}
     style={{
-      background: "rgba(14,14,18,0.7)",
-      padding: "36px 28px",
+      background: "rgba(14,14,18,0.5)",
+      padding: cellPad,
       transitionDelay: visible ? `${delay}s` : "0s",
       ...(visible ? { opacity: 1, transform: "translateY(0)" } : {}),
     }}
@@ -68,8 +68,19 @@ const Cell = ({ c, delay, visible, logoColor, dataIcon }: { c: typeof CELLS[0]; 
 const Stack = () => {
   const ref = useRef<HTMLElement>(null);
   const [vis, setVis] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  const [isTablet, setIsTablet] = useState(() => window.innerWidth < 1024);
   const { theme } = useTheme();
   const logoColor = theme === "dark" ? "EDEAE0" : "1a1a1a";
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth < 1024);
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -80,23 +91,28 @@ const Stack = () => {
     return () => obs.disconnect();
   }, []);
 
+  const sectionPad = isMobile ? "64px 20px" : isTablet ? "100px 40px" : "140px 56px";
+  const headingFs   = isMobile ? "clamp(40px,10vw,60px)" : "clamp(54px,8vw,96px)";
+  const cellPad     = isMobile ? "24px 18px" : "36px 28px";
+  const gridCols    = isMobile ? "repeat(2,1fr)" : isTablet ? "repeat(3,1fr)" : "repeat(4,1fr)";
+
   return (
-    <section id="stack" ref={ref} style={{ background: "rgba(9,9,11,0.75)", padding: "140px 56px", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+    <section id="stack" ref={ref} style={{ background: "rgba(9,9,11,0.4)", padding: sectionPad, borderTop: "1px solid rgba(255,255,255,0.04)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 52 }}>
         <div style={{ width: 28, height: 1, background: "var(--text3)" }} />
         <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--text3)", letterSpacing: "0.2em", textTransform: "uppercase" as const }}>
           TOOLS &amp; STACK
         </span>
       </div>
-      <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(56px,8vw,96px)", lineHeight: 1, color: "var(--text)", marginBottom: 12 }}>
+      <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: headingFs, lineHeight: 1, color: "var(--text)", marginBottom: 12 }}>
         THE STACK
       </h2>
       <p style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 300, fontSize: 15, color: "var(--text2)", lineHeight: 1.82, marginBottom: 56 }}>
         Tools I reach for without thinking twice.
       </p>
-      <div className="grid grid-cols-2 md:grid-cols-4" style={{ gap: 1, background: "rgba(6,6,8,0.4)" }}>
+      <div style={{ display: "grid", gridTemplateColumns: gridCols, gap: 1, background: "rgba(6,6,8,0.2)" }}>
         {CELLS.map((c, i) => (
-          <Cell key={c.name} c={c} delay={i * 0.045} visible={vis} logoColor={logoColor} dataIcon={c.icon} />
+          <Cell key={c.name} c={c} delay={i * 0.045} visible={vis} logoColor={logoColor} dataIcon={c.icon} cellPad={cellPad} />
         ))}
       </div>
     </section>
