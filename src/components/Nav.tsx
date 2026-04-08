@@ -1,22 +1,31 @@
-import { useEffect, useState } from "react";
-import { useTheme } from "../hooks/useTheme";
-import { useIsMobile } from "../hooks/useIsMobile";
+import { useState, useRef, useEffect } from "react";
 
 interface NavProps {
-  activeSlide: number;
-  totalSlides?: number;
+  current: number;
+  total: number;
+  goTo: (idx: number) => void;
 }
 
-const Nav = ({ activeSlide, totalSlides = 8 }: NavProps) => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [logoHov,  setLogoHov]  = useState(false);
-  const [displayNum, setDisplayNum] = useState(activeSlide);
-  const { theme, toggle } = useTheme();
-  const isMobile = useIsMobile();
+const MENU_LINKS = [
+  { num: "01", label: "The Beginning",    idx: 0 },
+  { num: "02", label: "The Work",         idx: 1 },
+  { num: "03", label: "The Craft",        idx: 2 },
+  { num: "04", label: "The Next Chapter", idx: 3 },
+];
+
+const Nav = ({ current, total, goTo }: NavProps) => {
+  const [menuOpen, setMenuOpen]   = useState(false);
+  const [logoHov,  setLogoHov]    = useState(false);
+  const [prevNum,  setPrevNum]    = useState(current);
+  const [animKey,  setAnimKey]    = useState(0);
+  const dirRef = useRef<"up" | "down">("down");
 
   useEffect(() => {
-    setDisplayNum(activeSlide);
-  }, [activeSlide]);
+    if (current === prevNum) return;
+    dirRef.current = current > prevNum ? "down" : "up";
+    setAnimKey(k => k + 1);
+    setPrevNum(current);
+  }, [current, prevNum]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -26,195 +35,162 @@ const Nav = ({ activeSlide, totalSlides = 8 }: NavProps) => {
     return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen]);
 
-  const scrollToSlide = (idx: number) => {
-    const snap = document.querySelector(".snap-container") as HTMLElement;
-    if (!snap) return;
-    const slides = snap.querySelectorAll(".slide");
-    slides[idx]?.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false);
-  };
-
   const pad = (n: number) => String(n + 1).padStart(2, "0");
-  const totalPad = String(totalSlides).padStart(2, "0");
-
-  const accentColor = theme === "dark" ? "#2A6B4A" : "#7C6AF7";
-  const accentBorder = theme === "dark" ? "rgba(42,107,74,0.3)" : "rgba(124,106,247,0.3)";
-  const accentBg = theme === "dark" ? "rgba(42,107,74,0.06)" : "rgba(124,106,247,0.06)";
-
-  const MENU_ITEMS = [
-    { label: "Projects",  idx: 1 },
-    { label: "Stack",     idx: 5 },
-    { label: "About",     idx: 6 },
-    { label: "Contact",   idx: 7 },
-  ];
 
   return (
     <>
       <nav style={{
-        position: "fixed",
-        top: 0, left: 0, right: 0,
-        height: 60,
-        zIndex: 500,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: isMobile ? "0 24px" : "0 48px",
+        position: "fixed", top: 0, left: 0, right: 0,
+        height: 64, zIndex: 500,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "0 48px",
         background: "transparent",
+        pointerEvents: "none",
       }}>
-        {/* Left: logo */}
+        {/* LEFT — Logo */}
         <button
-          onClick={() => scrollToSlide(0)}
+          onClick={() => goTo(0)}
           onMouseEnter={() => setLogoHov(true)}
           onMouseLeave={() => setLogoHov(false)}
-          aria-label="Home — scroll to top"
-          style={{ display: "flex", alignItems: "center", gap: 8, background: "none", border: "none" }}
+          aria-label="Go to top"
+          style={{
+            display: "flex", alignItems: "center", gap: 8,
+            background: "none", border: "none",
+            pointerEvents: "all",
+          }}
         >
           <span style={{
-            display: "block", width: 8, height: 8,
-            background: accentColor,
+            display: "block", width: 6, height: 6,
+            background: "#C8A96E",
             flexShrink: 0,
             transform: logoHov ? "rotate(45deg)" : "rotate(0deg)",
-            transition: "transform 0.35s cubic-bezier(0.16,1,0.3,1)",
+            transition: "transform 0.3s ease",
           }} />
           <span style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 20, letterSpacing: "0.08em",
-            color: "var(--text)",
+            fontFamily: "'Playfair Display', serif",
+            fontWeight: 700,
+            fontSize: 18, letterSpacing: "0.15em",
+            color: "#F5EDD8",
+            textShadow: "0 2px 8px rgba(0,0,0,0.8)",
           }}>PG</span>
         </button>
 
-        {/* Centre: slide counter */}
-        {!isMobile && (
+        {/* RIGHT — Counter + Hamburger */}
+        <div style={{ display: "flex", alignItems: "center", gap: 24, pointerEvents: "all" }}>
+          {/* Rolling counter */}
           <div style={{
             fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 11, color: "var(--text2)",
-            letterSpacing: "0.1em",
-            overflow: "hidden",
-            height: 16,
-            display: "flex", alignItems: "center",
+            fontSize: 11, color: "rgba(200,169,110,0.7)",
+            letterSpacing: "0.08em",
+            display: "flex", alignItems: "center", gap: 4,
+            overflow: "hidden", height: 16,
+            pointerEvents: "none",
           }}>
-            <span key={displayNum} style={{ display: "inline-block", animation: "countUp 0.3s cubic-bezier(0.16,1,0.3,1) forwards" }}>
-              {pad(displayNum)}
+            <span
+              key={animKey}
+              className={dirRef.current === "down" ? "roll-up" : "roll-down"}
+              style={{ display: "inline-block" }}
+            >
+              {pad(current)}
             </span>
-            <span style={{ margin: "0 4px" }}>/</span>
-            <span>{totalPad}</span>
-          </div>
-        )}
-
-        {/* Right: theme toggle + OTW + hamburger */}
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <button
-            onClick={toggle}
-            aria-label="Toggle theme"
-            style={{
-              width: 38, height: 22, borderRadius: 11,
-              background: "var(--bg2)",
-              border: `1px solid var(--border)`,
-              position: "relative", flexShrink: 0,
-              transition: "border-color 0.3s",
-            }}
-          >
-            <span style={{
-              position: "absolute", top: 3,
-              left: theme === "dark" ? 3 : 19,
-              width: 14, height: 14, borderRadius: "50%",
-              background: accentColor,
-              transition: "left 0.35s cubic-bezier(0.16,1,0.3,1)",
-              display: "block",
-            }} />
-          </button>
-
-          <div style={{
-            display: "inline-flex", alignItems: "center",
-            gap: isMobile ? 0 : 7,
-            padding: isMobile ? "5px" : "5px 12px",
-            border: `1px solid ${accentBorder}`,
-            background: accentBg,
-            borderRadius: 100,
-          }}>
-            <div style={{
-              width: 5, height: 5, borderRadius: "50%",
-              background: accentColor,
-              animation: "pulseDot 2s infinite",
-              flexShrink: 0,
-            }} />
-            {!isMobile && (
-              <span style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 10, letterSpacing: "0.1em",
-                color: accentColor, whiteSpace: "nowrap",
-              }}>OPEN TO WORK</span>
-            )}
+            <span style={{ opacity: 0.4 }}>/</span>
+            <span>{String(total).padStart(2, "0")}</span>
           </div>
 
+          {/* Hamburger */}
           <button
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={() => setMenuOpen(o => !o)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={menuOpen}
-            style={{ display: "flex", flexDirection: "column", gap: 5, background: "none", border: "none", padding: 4 }}
+            style={{
+              display: "flex", flexDirection: "column", gap: 5,
+              background: "none", border: "none",
+              padding: 4,
+            }}
           >
             {[0, 1, 2].map(i => (
               <span key={i} style={{
-                display: "block", width: 20, height: 1,
+                display: "block", width: 22, height: 1.5,
                 background: "var(--text)",
+                transformOrigin: "center",
+                transition: "transform 0.3s ease, opacity 0.3s ease",
                 opacity: menuOpen && i === 1 ? 0 : 1,
-                transition: "opacity 0.2s",
+                transform: menuOpen && i === 0 ? "translateY(6.5px) rotate(45deg)"
+                         : menuOpen && i === 2 ? "translateY(-6.5px) rotate(-45deg)"
+                         : "none",
               }} />
             ))}
           </button>
         </div>
       </nav>
 
-      {/* Full-screen menu overlay */}
+      {/* Fullscreen menu */}
       <div style={{
-        position: "fixed", inset: 0,
-        background: "var(--bg)", zIndex: 999,
-        display: "flex", flexDirection: "column",
-        justifyContent: "center",
-        padding: isMobile ? "80px 24px 40px" : "80px 56px 40px",
+        position: "fixed", inset: 0, zIndex: 800,
+        background: "rgba(10,26,10,0.96)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        display: "flex", flexDirection: "column", justifyContent: "center",
+        padding: "80px 56px",
         opacity: menuOpen ? 1 : 0,
         pointerEvents: menuOpen ? "auto" : "none",
         transition: "opacity 0.3s ease",
       }}>
+        {/* Close */}
         <button
           onClick={() => setMenuOpen(false)}
           style={{
-            position: "absolute", top: 20, right: 24,
+            position: "absolute", top: 24, right: 48,
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 20, color: "var(--text2)",
             background: "none", border: "none",
-            color: "var(--text)", fontSize: 24,
-            padding: 4, minHeight: 44, minWidth: 44,
-            display: "flex", alignItems: "center", justifyContent: "center",
           }}
         >✕</button>
 
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-          {MENU_ITEMS.map((item, i) => (
-            <button
-              key={item.label}
-              onClick={() => scrollToSlide(item.idx)}
+        {/* Links */}
+        <nav style={{ display: "flex", flexDirection: "column" }}>
+          {menuOpen && MENU_LINKS.map((item) => (
+            <a
+              key={item.idx}
+              href="#"
+              className="menu-item"
+              onClick={e => { e.preventDefault(); goTo(item.idx); setMenuOpen(false); }}
               style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: "clamp(40px,10vw,72px)",
-                color: "var(--text)",
-                background: "none", border: "none",
-                textAlign: "left", padding: "6px 0",
-                width: "100%",
-                transform: menuOpen ? "translateX(0)" : "translateX(40px)",
-                opacity: menuOpen ? 1 : 0,
-                transition: `transform 0.4s ease ${i * 0.06}s, opacity 0.4s ease ${i * 0.06}s`,
+                fontFamily: "'Playfair Display', serif",
+                fontStyle: "italic",
+                fontSize: "clamp(40px,6vw,72px)",
+                fontWeight: 700,
+                color: "var(--text2)",
+                textDecoration: "none",
+                display: "block",
+                marginBottom: 4,
+                transition: "color 0.25s, transform 0.25s",
+                lineHeight: 1.15,
               }}
-            >{item.label}</button>
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.color = "var(--text)";
+                (e.currentTarget as HTMLElement).style.transform = "translateX(12px)";
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.color = "var(--text2)";
+                (e.currentTarget as HTMLElement).style.transform = "translateX(0)";
+              }}
+            >
+              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "var(--gold)", marginRight: 16, fontStyle: "normal" }}>
+                {item.num} —
+              </span>
+              {item.label}
+            </a>
           ))}
-        </div>
+        </nav>
 
+        {/* Bottom info */}
         <div style={{
-          opacity: menuOpen ? 1 : 0,
-          transition: "opacity 0.4s ease 0.28s",
-          display: "flex", flexDirection: "column", gap: 12,
+          position: "absolute", bottom: 48, left: 56,
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontSize: 12, color: "var(--text2)",
+          display: "flex", flexDirection: "column", gap: 8,
         }}>
-          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: "var(--text2)", letterSpacing: "0.05em" }}>
-            parthghumatkarofficial@gmail.com
-          </span>
+          <span>parthghumatkarofficial@gmail.com</span>
           <div style={{ display: "flex", gap: 20 }}>
             {[
               { l: "GitHub",   h: "https://github.com/ParthGhumatkar" },
@@ -222,7 +198,7 @@ const Nav = ({ activeSlide, totalSlides = 8 }: NavProps) => {
               { l: "WhatsApp", h: "https://wa.me/919373956958" },
             ].map(s => (
               <a key={s.l} href={s.h} target="_blank" rel="noopener noreferrer"
-                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "var(--text2)", textDecoration: "none", letterSpacing: "0.06em" }}>
+                style={{ color: "var(--text2)", textDecoration: "none" }}>
                 {s.l}
               </a>
             ))}

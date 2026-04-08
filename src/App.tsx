@@ -1,12 +1,24 @@
-import { ThemeProvider } from "./hooks/useTheme";
-import Index from "./pages/Index";
+import { useSlider }       from "@/hooks/useSlider";
+import CustomCursor        from "@/components/CustomCursor";
+import Nav                 from "@/components/Nav";
+import SliderContainer     from "@/components/SliderContainer";
 
-function App() {
+export default function App() {
+  const slider = useSlider(4);
+
   return (
-    <ThemeProvider>
-      <Index />
-    </ThemeProvider>
+    <>
+      <CustomCursor />
+      <Nav
+        current={slider.current}
+        total={4}
+        goTo={slider.goTo}
+      />
+      <SliderContainer
+        current={slider.current}
+        exiting={slider.exiting}
+        goTo={slider.goTo}
+      />
+    </>
   );
 }
-
-export default App;
