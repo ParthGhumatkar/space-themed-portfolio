@@ -1,8 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Manrope:wght@300;400;500;700&family=IBM+Plex+Mono:wght@300;400&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html {
+  height: -webkit-fill-available;
+}
+
+/* ─── Font Variables ─── */
+:root {
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body:    'Cormorant Garamond', serif;
+  --font-mono:    'Syne Mono', monospace;
+}
 
 /* ─── Design Tokens ─── */
 :root {
@@ -32,11 +41,16 @@
 html, body {
   width: 100%;
   height: 100%;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
-  background: var(--bg);
+  background: #091a0d;
   color: var(--text);
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-body);
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection { background: var(--green); color: var(--bg); }
@@ -52,8 +66,6 @@ html, body {
   from { opacity: 1; transform: scale(1);    filter: blur(0);   }
   to   { opacity: 0; transform: scale(1.04); filter: blur(3px); }
 }
-.slide-entering { animation: slideEnter 0.9s var(--ease) 0.1s both; }
-.slide-exiting  { animation: slideExit  0.7s ease-in both; }
 
 /* ─── Ken Burns ─── */
 @keyframes kenBurns {
@@ -73,7 +85,7 @@ html, body {
 }
 
 /* ─── Reveal wrap ─── */
-.reveal-wrap { overflow: hidden; display: block; }
+.reveal-wrap { overflow: hidden; display: block; padding: 0.05em 0.08em; margin: -0.05em -0.08em; }
 @keyframes revealIn {
   from { transform: translateY(108%); }
   to   { transform: translateY(0);    }
@@ -84,29 +96,6 @@ html, body {
   animation: revealIn 0.9s var(--ease) forwards;
 }
 
-/* ─── Pills scroll ─── */
-@keyframes pillsLeft {
-  from { transform: translateX(0);    }
-  to   { transform: translateX(-50%); }
-}
-@keyframes pillsRight {
-  from { transform: translateX(-50%); }
-  to   { transform: translateX(0);    }
-}
-.pills-left {
-  display: flex;
-  width: max-content;
-  animation: pillsLeft 30s linear infinite;
-  will-change: transform;
-}
-.pills-right {
-  display: flex;
-  width: max-content;
-  animation: pillsRight 24s linear infinite;
-  will-change: transform;
-}
-.pills-left:hover,
-.pills-right:hover { animation-play-state: paused; }
 
 /* ─── Bounce ─── */
 @keyframes bounceY {
@@ -167,4 +156,80 @@ html, body {
   .slide-footer         { left: 24px !important; right: 24px !important; font-size: 8px !important; }
   .pills-row2-hide      { display: none !important; }
   nav                   { padding: 0 20px !important; }
+}
+
+/* ─── Headline breathing ─── */
+@keyframes headline-breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.92;
+  }
+  50% {
+    transform: scale(1.018);
+    opacity: 1;
+  }
+}
+
+@keyframes headline-breathe-accent {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.022);
+    opacity: 1;
+  }
+}
+
+/* ─── Firefly particles ─── */
+@keyframes firefly-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(var(--fx), var(--fy)) scale(0.6);
+    opacity: 0;
+  }
+}
+
+@keyframes firefly-glow {
+  0%, 100% { box-shadow: 0 0 3px 1px var(--fc); }
+  50%       { box-shadow: 0 0 8px 3px var(--fc); }
+}
+
+.firefly {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation:
+    firefly-drift var(--fd) ease-in-out var(--fdelay) infinite,
+    firefly-glow  var(--fg) ease-in-out var(--fdelay) infinite;
+}
+
+/* ─── Milestone image fade ─── */
+@keyframes imgFadeIn {
+  from { opacity: 0; transform: scale(1.04); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ─── Ripple effect ─── */
+@keyframes ripple-expand {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
 }

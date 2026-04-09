@@ -28,7 +28,7 @@ const Slide04_Contact = ({ isActive }: Props) => {
       {/* Layer 0 — Oil painting */}
       <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
         <img ref={imgRef} src="/slides/slide-04.png" alt=""
-          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }} />
+          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }} />
       </div>
 
       {/* Layer 1 — Base dark */}
@@ -51,9 +51,9 @@ const Slide04_Contact = ({ isActive }: Props) => {
         <div style={{ position: "absolute", inset: 0, zIndex: 4 }}>
 
           {/* Content — bottom left */}
-          <div className="slide-contact-content" style={{ position: "absolute", bottom: 72, left: 56 }}>
+          <div className="slide-contact-content" style={{ position: "absolute", top: "50%", transform: "translateY(-40%)", left: "clamp(2rem, 4vw, 4rem)", maxWidth: 560 }}>
 
-            <p className="fade-up" style={{ ...d(0), fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: "0.2em", color: "var(--gold)", marginBottom: 24, textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
+            <p className="fade-up" style={{ ...d(0), fontFamily: "'Syne Mono', monospace", fontSize: "clamp(0.6rem, 0.9vh, 0.75rem)", letterSpacing: "0.2em", color: "var(--gold)", marginBottom: "clamp(0.75rem, 2vh, 1.5rem)", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
               GET IN TOUCH
             </p>
 
@@ -62,9 +62,10 @@ const Slide04_Contact = ({ isActive }: Props) => {
               <span className="reveal-wrap">
                 <span className="reveal-inner" style={{
                   animationDelay: "0.1s", display: "block",
-                  fontFamily: "'Playfair Display', serif",
-                  fontWeight: 700, fontStyle: "italic",
-                  fontSize: "clamp(48px,7vw,100px)",
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 300,
+                  fontStyle: "italic",
+                  fontSize: "clamp(2rem, min(5vw, 7vh), 4.5rem)",
                   lineHeight: 0.9, letterSpacing: "0.01em",
                   color: "rgba(245,237,216,0.7)",
                   textShadow: "0 4px 32px rgba(0,0,0,0.9)",
@@ -74,9 +75,9 @@ const Slide04_Contact = ({ isActive }: Props) => {
               <span className="reveal-wrap">
                 <span className="reveal-inner" style={{
                   animationDelay: "0.22s", display: "block",
-                  fontFamily: "'Playfair Display', serif",
-                  fontWeight: 900,
-                  fontSize: "clamp(64px,9vw,130px)",
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 300,
+                  fontSize: "clamp(2.5rem, min(6vw, 9vh), 5rem)",
                   lineHeight: 0.88, letterSpacing: "-0.01em",
                   color: "#F5EDD8",
                   textShadow: "0 4px 32px rgba(0,0,0,0.9)",
@@ -86,9 +87,10 @@ const Slide04_Contact = ({ isActive }: Props) => {
               <span className="reveal-wrap">
                 <span className="reveal-inner" style={{
                   animationDelay: "0.34s", display: "block",
-                  fontFamily: "'Playfair Display', serif",
-                  fontWeight: 700,
-                  fontSize: "clamp(40px,5.5vw,80px)",
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 300,
+                  fontStyle: "italic",
+                  fontSize: "clamp(1.75rem, min(4vw, 6vh), 3.5rem)",
                   lineHeight: 0.95, letterSpacing: "0em",
                   color: "#C8A96E",
                   textShadow: "0 4px 32px rgba(0,0,0,0.9)",
@@ -102,8 +104,8 @@ const Slide04_Contact = ({ isActive }: Props) => {
               style={{
                 ...d(500),
                 display: "block", marginTop: 56,
-                fontFamily: "'Manrope', sans-serif", fontWeight: 400,
-                fontSize: "clamp(14px,1.8vw,20px)",
+                fontFamily: "'Cormorant Garamond', serif", fontWeight: 400,
+                fontSize: "clamp(0.8rem, 1.3vh, 1rem)",
                 color: "#F5EDD8", textDecoration: "none",
                 textShadow: "0 2px 16px rgba(0,0,0,0.9)",
                 paddingBottom: 8,
@@ -134,7 +136,7 @@ const Slide04_Contact = ({ isActive }: Props) => {
                   href={s.href}
                   target="_blank" rel="noopener noreferrer"
                   style={{
-                    fontFamily: "'Manrope', sans-serif", fontWeight: 400, fontSize: 14,
+                    fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: "clamp(0.8rem, 1.3vh, 1rem)",
                     color: "var(--text2)", textDecoration: "none",
                     transition: "color 0.2s",
                   }}
@@ -152,7 +154,7 @@ const Slide04_Contact = ({ isActive }: Props) => {
             ...d(760),
             position: "absolute", bottom: 24, left: 56, right: 56,
             display: "flex", justifyContent: "space-between",
-            fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--text3)",
+            fontFamily: "'Syne Mono', monospace", fontSize: 10, color: "var(--text3)",
           }}>
             <span>© 2025 PARTH GHUMATKAR</span>
             <span>PUNE, INDIA</span>

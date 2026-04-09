@@ -40,10 +40,15 @@ const Nav = ({ current, total, goTo }: NavProps) => {
   return (
     <>
       <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0,
-        height: 64, zIndex: 500,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "0 48px",
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 'clamp(1rem, 2.5vh, 1.75rem) clamp(1.5rem, 3vw, 2.5rem)',
         background: "transparent",
         pointerEvents: "none",
       }}>
@@ -60,28 +65,25 @@ const Nav = ({ current, total, goTo }: NavProps) => {
           }}
         >
           <span style={{
-            display: "block", width: 6, height: 6,
-            background: "#C8A96E",
-            flexShrink: 0,
-            transform: logoHov ? "rotate(45deg)" : "rotate(0deg)",
-            transition: "transform 0.3s ease",
-          }} />
-          <span style={{
-            fontFamily: "'Playfair Display', serif",
-            fontWeight: 700,
-            fontSize: 18, letterSpacing: "0.15em",
+            fontFamily: "'Cormorant Garamond', serif",
+            fontWeight: 600,
+            fontSize: 'clamp(0.75rem, 1vw, 0.95rem)',
+            letterSpacing: "0.08em",
             color: "#F5EDD8",
             textShadow: "0 2px 8px rgba(0,0,0,0.8)",
-          }}>PG</span>
+            transform: logoHov ? "rotate(6deg)" : "rotate(0deg)",
+            transition: "transform 0.3s ease",
+          }}>■ PG</span>
         </button>
 
         {/* RIGHT — Counter + Hamburger */}
         <div style={{ display: "flex", alignItems: "center", gap: 24, pointerEvents: "all" }}>
           {/* Rolling counter */}
           <div style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 11, color: "rgba(200,169,110,0.7)",
-            letterSpacing: "0.08em",
+            fontFamily: "'Syne Mono', monospace",
+            fontSize: 'clamp(0.65rem, 0.8vw, 0.75rem)',
+            color: "rgba(250,243,224,0.5)",
+            letterSpacing: "0.15em",
             display: "flex", alignItems: "center", gap: 4,
             overflow: "hidden", height: 16,
             pointerEvents: "none",
@@ -140,7 +142,7 @@ const Nav = ({ current, total, goTo }: NavProps) => {
           onClick={() => setMenuOpen(false)}
           style={{
             position: "absolute", top: 24, right: 48,
-            fontFamily: "'IBM Plex Mono', monospace",
+            fontFamily: "'Syne Mono', monospace",
             fontSize: 20, color: "var(--text2)",
             background: "none", border: "none",
           }}
@@ -155,10 +157,10 @@ const Nav = ({ current, total, goTo }: NavProps) => {
               className="menu-item"
               onClick={e => { e.preventDefault(); goTo(item.idx); setMenuOpen(false); }}
               style={{
-                fontFamily: "'Playfair Display', serif",
-                fontStyle: "italic",
+                fontFamily: "'Cormorant Garamond', serif",
                 fontSize: "clamp(40px,6vw,72px)",
-                fontWeight: 700,
+                fontWeight: 300,
+                letterSpacing: "0.05em",
                 color: "var(--text2)",
                 textDecoration: "none",
                 display: "block",
@@ -175,7 +177,7 @@ const Nav = ({ current, total, goTo }: NavProps) => {
                 (e.currentTarget as HTMLElement).style.transform = "translateX(0)";
               }}
             >
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "var(--gold)", marginRight: 16, fontStyle: "normal" }}>
+              <span style={{ fontFamily: "'Syne Mono', monospace", fontSize: 11, color: "var(--gold)", marginRight: 16 }}>
                 {item.num} —
               </span>
               {item.label}
@@ -186,7 +188,7 @@ const Nav = ({ current, total, goTo }: NavProps) => {
         {/* Bottom info */}
         <div style={{
           position: "absolute", bottom: 48, left: 56,
-          fontFamily: "'IBM Plex Mono', monospace",
+          fontFamily: "'Syne Mono', monospace",
           fontSize: 12, color: "var(--text2)",
           display: "flex", flexDirection: "column", gap: 8,
         }}>

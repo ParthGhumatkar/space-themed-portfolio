@@ -1,23 +1,24 @@
-import { useSlider }       from "@/hooks/useSlider";
-import CustomCursor        from "@/components/CustomCursor";
-import Nav                 from "@/components/Nav";
-import SliderContainer     from "@/components/SliderContainer";
+import { useSlider }    from "@/hooks/useSlider";
+import CustomCursor     from "@/components/CustomCursor";
+import Nav              from "@/components/Nav";
+import SlideStack       from "@/components/SlideStack";
 
 export default function App() {
-  const slider = useSlider(4);
+  const { currentSlide, prevSlide, isTransitioning, goTo } = useSlider(4);
 
   return (
     <>
       <CustomCursor />
       <Nav
-        current={slider.current}
+        current={currentSlide}
         total={4}
-        goTo={slider.goTo}
+        goTo={goTo}
       />
-      <SliderContainer
-        current={slider.current}
-        exiting={slider.exiting}
-        goTo={slider.goTo}
+      <SlideStack
+        currentSlide={currentSlide}
+        prevSlide={prevSlide}
+        isTransitioning={isTransitioning}
+        goTo={goTo}
       />
     </>
   );

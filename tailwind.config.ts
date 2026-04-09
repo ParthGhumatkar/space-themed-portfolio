@@ -12,9 +12,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['"Bebas Neue"', 'sans-serif'],
-        body: ['"Manrope"', 'sans-serif'],
-        mono: ['"IBM Plex Mono"', 'monospace'],
+        display: ['"Cormorant Garamond"', 'serif'],
+        body:    ['"Cormorant Garamond"', 'serif'],
+        mono:    ['"Syne Mono"', 'monospace'],
       },
       colors: {
         bg:       "#0A0A0A",
