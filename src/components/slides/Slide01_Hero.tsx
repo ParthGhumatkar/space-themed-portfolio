@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 interface Props { isActive: boolean; goTo: (idx: number) => void; }
 
@@ -6,6 +6,9 @@ const Slide01_Hero = ({ isActive, goTo }: Props) => {
   const imgRef = useRef<HTMLImageElement>(null);
   const rippleContainerRef = useRef<HTMLDivElement>(null);
   const fireflyRef = useRef<HTMLDivElement>(null);
+  const [animate, setAnimate] = useState(false);
+  const [count0, setCount0] = useState(0);
+  const [count1, setCount1] = useState(0);
 
   useEffect(() => {
     const img = imgRef.current;
@@ -24,6 +27,36 @@ const Slide01_Hero = ({ isActive, goTo }: Props) => {
       img.className = "";
       img.style.transform = "scale(1.06)";
     }
+  }, [isActive]);
+
+  useEffect(() => {
+    if (isActive) {
+      const t = setTimeout(() => setAnimate(true), 50);
+      return () => clearTimeout(t);
+    } else {
+      setAnimate(false);
+    }
+  }, [isActive]);
+
+  useEffect(() => {
+    if (!isActive) {
+      setCount0(0);
+      setCount1(0);
+      return;
+    }
+    let c0 = 0;
+    const i0 = setInterval(() => {
+      c0 = Math.min(c0 + 1, 2);
+      setCount0(c0);
+      if (c0 >= 2) clearInterval(i0);
+    }, 600);
+    let c1 = 0;
+    const i1 = setInterval(() => {
+      c1 = Math.min(c1 + 1, 3);
+      setCount1(c1);
+      if (c1 >= 3) clearInterval(i1);
+    }, Math.round(1400 / 3));
+    return () => { clearInterval(i0); clearInterval(i1); };
   }, [isActive]);
 
   useEffect(() => {
@@ -175,6 +208,15 @@ const Slide01_Hero = ({ isActive, goTo }: Props) => {
         }}
       />
 
+      {/* Vignette overlay */}
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        zIndex: 1,
+        pointerEvents: "none",
+        background: "radial-gradient(ellipse at 30% 50%, transparent 40%, rgba(0,0,0,0.5) 100%)",
+      }} />
+
       {/* Layer 2 — Base dark */}
       <div style={{ position: "absolute", inset: 0, zIndex: 3, background: "rgba(5,12,5,0.45)" }} />
 
@@ -195,102 +237,107 @@ const Slide01_Hero = ({ isActive, goTo }: Props) => {
         <div style={{ position: "absolute", inset: 0, zIndex: 6 }}>
 
           {/* Bottom-left content */}
-          <div className="slide-hero-content" style={{ position: "absolute", top: "clamp(5rem, 10vh, 7rem)", left: "clamp(2rem, 4vw, 4rem)", maxWidth: "55vw" }}>
+          <div className="slide-hero-content" style={{ position: "absolute", top: 80, left: 56, display: "flex", flexDirection: "column", justifyContent: "flex-start", maxHeight: "calc(100vh - 120px)", overflow: "visible", maxWidth: "60vw" }}>
 
-            <p className="fade-up" style={{ ...d(200), fontFamily: "'Syne Mono', monospace", fontSize: 10, color: "var(--gold)", letterSpacing: "0.25em", marginBottom: 24, textShadow: "0 2px 16px rgba(0,0,0,0.95), 0 0 30px rgba(0,0,0,0.9)", animation: "headline-breathe 7s ease-in-out 1s infinite", transformOrigin: "left center" }}>
+            <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, color: "var(--gold)", letterSpacing: "0.15em", marginBottom: 24, textShadow: "0 2px 16px rgba(0,0,0,0.95), 0 0 30px rgba(0,0,0,0.9)", animation: "overlineIn 1s ease 0s both", animationPlayState: animate ? "running" : "paused" }}>
               PUNE · INDIA · FULL STACK DEVELOPER
             </p>
 
-            <div style={{ display: "flex", flexDirection: "column", overflow: "visible" }}>
-              {/* Line 1 — whisper */}
-              <span className="reveal-wrap">
-                <span className="reveal-inner" style={{
-                  animationDelay: "0.35s",
-                  display: "block",
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontStyle: "italic",
-                  fontSize: "clamp(4.5rem, min(9vw, 13vh), 9rem)",
-                  lineHeight: 0.88, letterSpacing: "0.01em",
-                  color: "rgba(245,237,216,0.65)",
-                  textShadow: "0 4px 40px rgba(0,0,0,0.98), 0 0 80px rgba(0,0,0,0.7)",
-                  animation: "headline-breathe 5s ease-in-out 1.6s infinite",
-                  transformOrigin: "left center",
-                  paddingRight: "0.1em",
-                  paddingLeft: "0.02em",
-                }}>from idea</span>
-              </span>
-              {/* Line 2 — dominant */}
-              <span className="reveal-wrap">
-                <span className="reveal-inner" style={{
-                  animationDelay: "0.5s",
-                  display: "block",
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontSize: "clamp(7rem, min(14vw, 20vh), 14rem)",
-                  lineHeight: 0.88, letterSpacing: "-0.01em",
-                  color: "#F5EDD8",
-                  textShadow: "0 4px 40px rgba(0,0,0,0.98), 0 0 80px rgba(0,0,0,0.7)",
-                  animation: "headline-breathe-accent 5s ease-in-out 2s infinite",
-                  transformOrigin: "left center",
-                  paddingRight: "0.1em",
-                  paddingLeft: "0.02em",
-                }}>
-                  to <em style={{ color: "#C8A96E", fontStyle: "italic" }}>live</em>
-                </span>
-              </span>
-              {/* Line 3 — echo */}
-              <span className="reveal-wrap">
-                <span className="reveal-inner" style={{
-                  animationDelay: "0.65s",
-                  display: "block",
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontSize: "clamp(4.5rem, min(9vw, 13vh), 9rem)",
-                  lineHeight: 0.88, letterSpacing: "0em",
-                  color: "#C8A96E",
-                  textShadow: "0 4px 40px rgba(0,0,0,0.98), 0 0 80px rgba(0,0,0,0.7)",
-                  animation: "headline-breathe 5s ease-in-out 2.4s infinite",
-                  transformOrigin: "left center",
-                  paddingRight: "0.1em",
-                  paddingLeft: "0.02em",
-                }}>in days.</span>
-              </span>
+            <div style={{ display: "flex", flexDirection: "column", overflow: "visible", position: "relative", zIndex: 2, gap: 0 }}>
+              {/* Line 1 — from idea */}
+              <span style={{
+                animation: "clipReveal 0.9s cubic-bezier(0.16,1,0.3,1) 0.1s both",
+                animationPlayState: animate ? "running" : "paused",
+                display: "block",
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 800,
+                fontStyle: "normal",
+                fontSize: "clamp(52px, 7vw, 96px)",
+                lineHeight: 1.0,
+                letterSpacing: "-0.02em",
+                color: "var(--text)",
+                overflow: "visible",
+              }}>from idea</span>
+              {/* Line 2 — to live */}
+              <span style={{
+                animation: "clipReveal 0.9s cubic-bezier(0.16,1,0.3,1) 0.3s both",
+                animationPlayState: animate ? "running" : "paused",
+                display: "block",
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 800,
+                fontStyle: "normal",
+                fontSize: "clamp(52px, 7vw, 96px)",
+                lineHeight: 1.0,
+                letterSpacing: "-0.02em",
+                color: "var(--text)",
+                overflow: "visible",
+              }}>to <span style={{ color: "var(--gold)" }}>live</span></span>
+              {/* Line 3 — in days. */}
+              <span style={{
+                animation: "clipReveal 0.9s cubic-bezier(0.16,1,0.3,1) 0.5s both",
+                animationPlayState: animate ? "running" : "paused",
+                display: "block",
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 800,
+                fontStyle: "normal",
+                fontSize: "clamp(52px, 7vw, 96px)",
+                lineHeight: 1.0,
+                letterSpacing: "-0.02em",
+                color: "var(--text)",
+                overflow: "visible",
+                paddingBottom: 6,
+              }}>in days.</span>
             </div>
 
-            <p className="fade-up" style={{ ...d(800), fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: "clamp(0.85rem, 1.3vh, 1rem)", color: "rgba(245,237,216,0.75)", maxWidth: 380, marginTop: "clamp(1.5rem, 3vh, 2.5rem)", lineHeight: 1.8, letterSpacing: "0.02em", textShadow: "0 2px 20px rgba(0,0,0,0.95), 0 0 40px rgba(0,0,0,0.8)" }}>
+            <p style={{ animation: "fadeUp 0.7s ease 0.7s both", animationPlayState: animate ? "running" : "paused", position: "relative", zIndex: 2, fontFamily: "'DM Sans', sans-serif", fontWeight: 400, fontSize: 15, color: "rgba(245,237,216,0.75)", maxWidth: 380, marginTop: 20, lineHeight: 1.8, letterSpacing: "0.02em", textShadow: "0 2px 20px rgba(0,0,0,0.95), 0 0 40px rgba(0,0,0,0.8)" }}>
               Building full-stack products with AI at the core. Two live. Always shipping.
             </p>
 
-            <div className="fade-up" style={{ ...d(880), width: "3rem", height: "1px", background: "linear-gradient(to right, #C8A96E, transparent)", opacity: 0.8, margin: "clamp(1rem, 2vh, 1.5rem) 0" }} />
+            <div style={{ height: "1px", background: "linear-gradient(to right, #C8A96E, transparent)", margin: "clamp(1rem, 2vh, 1.5rem) 0", animation: "lineGrow 0.8s ease 0.9s both", animationPlayState: animate ? "running" : "paused" }} />
 
-            <div className="fade-up" style={{ ...d(960), display: "flex", alignItems: "center", gap: 24 }}>
+            <div style={{ animation: "fadeUp 0.7s ease 1.0s both", animationPlayState: animate ? "running" : "paused", display: "flex", alignItems: "center", gap: 24, marginTop: 24 }}>
               <button
                 onClick={() => goTo(1)}
                 style={{
                   position: "relative",
                   background: "transparent",
-                  border: "1px solid rgba(200,169,110,0.6)",
-                  color: "#C8A96E",
-                  fontFamily: "'Syne Mono', monospace",
+                  border: "1px solid rgba(245,237,216,0.3)",
+                  color: "var(--text)",
+                  fontFamily: "var(--font-mono)",
                   fontSize: 11,
                   letterSpacing: "0.2em",
                   padding: "16px 44px",
                   borderRadius: 0,
                   cursor: "pointer",
                   overflow: "hidden",
-                  transition: "color 0.4s ease, border-color 0.4s ease, background 0.4s ease, transform 0.2s ease",
+                  transition: "all 0.3s ease",
                 }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "#C8A96E"; el.style.color = "#0a1a0a"; el.style.borderColor = "#C8A96E"; el.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "transparent"; el.style.color = "#C8A96E"; el.style.borderColor = "rgba(200,169,110,0.6)"; el.style.transform = "translateY(0)"; }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "var(--gold)"; el.style.color = "#0a1a0a"; el.style.borderColor = "var(--gold)"; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "transparent"; el.style.color = "var(--text)"; el.style.borderColor = "rgba(245,237,216,0.3)"; }}
               >VIEW WORK</button>
               <a
                 href="https://github.com/ParthGhumatkar"
                 target="_blank" rel="noopener noreferrer"
-                style={{ fontFamily: "'Syne Mono', monospace", fontSize: 11, letterSpacing: "0.2em", color: "rgba(245,237,216,0.6)", textDecoration: "none", textTransform: "uppercase", display: "inline-flex", alignItems: "center", gap: "8px", transition: "color 0.3s ease, gap 0.3s ease" }}
-                onMouseEnter={e => { e.currentTarget.style.color = "#C8A96E"; e.currentTarget.style.gap = "14px"; }}
-                onMouseLeave={e => { e.currentTarget.style.color = "rgba(245,237,216,0.6)"; e.currentTarget.style.gap = "8px"; }}
-              >GITHUB <span style={{ fontSize: 16 }}>↗</span></a>
+                style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.2em", color: "rgba(245,237,216,0.6)", textDecoration: "none", textTransform: "uppercase", display: "inline-flex", alignItems: "center", gap: "8px", transition: "color 0.3s ease, gap 0.3s ease" }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.color = "#C8A96E";
+                  e.currentTarget.style.gap = "14px";
+                  const u = e.currentTarget.querySelector('.gh-underline') as HTMLElement;
+                  if (u) u.style.width = '100%';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.color = "rgba(245,237,216,0.6)";
+                  e.currentTarget.style.gap = "8px";
+                  const u = e.currentTarget.querySelector('.gh-underline') as HTMLElement;
+                  if (u) u.style.width = '0';
+                }}
+              >
+                <span style={{ position: "relative" }}>
+                  GITHUB
+                  <div className="gh-underline" style={{ position: "absolute", bottom: -2, left: 0, height: 1, width: 0, background: "var(--gold)", transition: "width 0.3s ease" }} />
+                </span>
+                <span style={{ fontSize: 16 }}>↗</span>
+              </a>
             </div>
           </div>
 
@@ -305,21 +352,20 @@ const Slide01_Hero = ({ isActive, goTo }: Props) => {
             alignItems: "flex-end",
           }}>
             {[
-              { number: "2", label: "Live products" },
-              { number: "3+", label: "Years building" },
-              { number: "∞", label: "Lines shipped" },
+              { number: String(count0), label: "Live products", delay: 1200 },
+              { number: `${count1}+`, label: "Years building", delay: 1400 },
+              { number: "∞", label: "Lines shipped", delay: 1600 },
             ].map((stat, i) => (
               <div
                 key={i}
-                className="fade-up"
                 style={{
-                  animationDelay: `${1000 + i * 120}ms`,
-                  animationFillMode: "both",
+                  animation: `fadeUp 0.6s ease ${stat.delay}ms both`,
+                  animationPlayState: animate ? "running" : "paused",
                   textAlign: "right",
                 }}
               >
                 <div style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "var(--font-heading)",
                   fontWeight: 300,
                   fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
                   lineHeight: 1,
@@ -327,7 +373,7 @@ const Slide01_Hero = ({ isActive, goTo }: Props) => {
                   letterSpacing: "-0.02em",
                 }}>{stat.number}</div>
                 <div style={{
-                  fontFamily: "'Syne Mono', monospace",
+                  fontFamily: "var(--font-mono)",
                   fontSize: "clamp(0.55rem, 0.7vw, 0.65rem)",
                   letterSpacing: "0.2em",
                   color: "rgba(245,237,216,0.45)",
@@ -344,7 +390,7 @@ const Slide01_Hero = ({ isActive, goTo }: Props) => {
             display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
           }}>
             <span style={{
-              fontFamily: "'Syne Mono', monospace", fontSize: 9, color: "var(--text2)",
+              fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text2)",
               writingMode: "vertical-rl", transform: "rotate(180deg)", letterSpacing: "0.2em",
             }}>SCROLL</span>
             <span className="bounce" style={{ color: "var(--text2)", fontSize: 14 }}>↓</span>

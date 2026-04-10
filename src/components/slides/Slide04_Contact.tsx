@@ -50,116 +50,174 @@ const Slide04_Contact = ({ isActive }: Props) => {
       {isActive && (
         <div style={{ position: "absolute", inset: 0, zIndex: 4 }}>
 
-          {/* Content — bottom left */}
-          <div className="slide-contact-content" style={{ position: "absolute", top: "50%", transform: "translateY(-40%)", left: "clamp(2rem, 4vw, 4rem)", maxWidth: 560 }}>
+          {/* Ghost background text */}
+          <div style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            pointerEvents: "none",
+            zIndex: 0,
+          }}>
+            <span style={{
+              fontFamily: "var(--font-heading)",
+              fontSize: "clamp(180px, 25vw, 360px)",
+              fontWeight: 800,
+              color: "rgba(200,169,110,0.03)",
+              letterSpacing: "-0.04em",
+              userSelect: "none",
+            }}>CONTACT</span>
+          </div>
 
-            <p className="fade-up" style={{ ...d(0), fontFamily: "'Syne Mono', monospace", fontSize: "clamp(0.6rem, 0.9vh, 0.75rem)", letterSpacing: "0.2em", color: "var(--gold)", marginBottom: "clamp(0.75rem, 2vh, 1.5rem)", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>
-              GET IN TOUCH
-            </p>
+          {/* Main centered content */}
+          <div style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1,
+          }}>
 
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              {/* Line 1 — whisper */}
-              <span className="reveal-wrap">
-                <span className="reveal-inner" style={{
-                  animationDelay: "0.1s", display: "block",
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontStyle: "italic",
-                  fontSize: "clamp(2rem, min(5vw, 7vh), 4.5rem)",
-                  lineHeight: 0.9, letterSpacing: "0.01em",
-                  color: "rgba(245,237,216,0.7)",
-                  textShadow: "0 4px 32px rgba(0,0,0,0.9)",
-                }}>let's build</span>
-              </span>
-              {/* Line 2 — dominant */}
-              <span className="reveal-wrap">
-                <span className="reveal-inner" style={{
-                  animationDelay: "0.22s", display: "block",
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontSize: "clamp(2.5rem, min(6vw, 9vh), 5rem)",
-                  lineHeight: 0.88, letterSpacing: "-0.01em",
-                  color: "#F5EDD8",
-                  textShadow: "0 4px 32px rgba(0,0,0,0.9)",
-                }}>something</span>
-              </span>
-              {/* Line 3 — echo */}
-              <span className="reveal-wrap">
-                <span className="reveal-inner" style={{
-                  animationDelay: "0.34s", display: "block",
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontStyle: "italic",
-                  fontSize: "clamp(1.75rem, min(4vw, 6vh), 3.5rem)",
-                  lineHeight: 0.95, letterSpacing: "0em",
-                  color: "#C8A96E",
-                  textShadow: "0 4px 32px rgba(0,0,0,0.9)",
-                }}>that matters.</span>
-              </span>
-            </div>
+            {/* Headline */}
+            <h1 className="fade-up" style={{
+              ...d(100),
+              fontFamily: "var(--font-heading)",
+              fontSize: "clamp(56px, 8vw, 120px)",
+              fontWeight: 800,
+              lineHeight: 1,
+              letterSpacing: "-0.03em",
+              color: "#F5EDD8",
+              textAlign: "center",
+              textShadow: "0 8px 40px rgba(0,0,0,0.8)",
+              margin: 0,
+              marginBottom: 48,
+            }}>
+              START A<br/>PROJECT
+            </h1>
 
+            {/* Floating email link */}
             <a
               href="mailto:parthghumatkarofficial@gmail.com"
               className="fade-up"
               style={{
-                ...d(500),
-                display: "block", marginTop: 56,
-                fontFamily: "'Cormorant Garamond', serif", fontWeight: 400,
-                fontSize: "clamp(0.8rem, 1.3vh, 1rem)",
-                color: "#F5EDD8", textDecoration: "none",
-                textShadow: "0 2px 16px rgba(0,0,0,0.9)",
-                paddingBottom: 8,
-                borderBottom: "1px solid var(--border)",
-                width: "fit-content",
-                transition: "color 0.25s, border-color 0.25s",
+                ...d(300),
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 12,
+                padding: "18px 32px",
+                background: "rgba(200,169,110,0.08)",
+                border: "1px solid rgba(200,169,110,0.25)",
+                borderRadius: 2,
+                fontFamily: "'Geist Mono', monospace",
+                fontSize: 13,
+                letterSpacing: "0.05em",
+                color: "#F5EDD8",
+                textDecoration: "none",
+                transition: "all 0.4s ease",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.3)",
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.color = "var(--gold2)";
-                (e.currentTarget as HTMLElement).style.borderBottomColor = "var(--gold)";
+                const el = e.currentTarget as HTMLElement;
+                el.style.background = "rgba(200,169,110,0.15)";
+                el.style.borderColor = "rgba(200,169,110,0.6)";
+                el.style.transform = "translateY(-2px)";
+                el.style.boxShadow = "0 8px 40px rgba(200,169,110,0.15)";
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.color = "#F5EDD8";
-                (e.currentTarget as HTMLElement).style.borderBottomColor = "var(--border)";
+                const el = e.currentTarget as HTMLElement;
+                el.style.background = "rgba(200,169,110,0.08)";
+                el.style.borderColor = "rgba(200,169,110,0.25)";
+                el.style.transform = "translateY(0)";
+                el.style.boxShadow = "0 4px 24px rgba(0,0,0,0.3)";
               }}
             >
+              <span style={{ color: "var(--gold)" }}>✉</span>
               parthghumatkarofficial@gmail.com
             </a>
 
-            <div className="fade-up" style={{ ...d(640), marginTop: 40, display: "flex", gap: 28 }}>
+            {/* Social links */}
+            <div className="fade-up" style={{
+              ...d(450),
+              marginTop: 40,
+              display: "flex",
+              alignItems: "center",
+              gap: 48,
+            }}>
               {[
-                { label: "GitHub",   href: "https://github.com/ParthGhumatkar" },
-                { label: "LinkedIn", href: "https://linkedin.com/in/parth-ghumatkar" },
-                { label: "WhatsApp", href: "https://wa.me/919373956958" },
-              ].map(s => (
+                { label: "GITHUB", href: "https://github.com/ParthGhumatkar" },
+                { label: "LINKEDIN", href: "https://linkedin.com/in/parth-ghumatkar" },
+                { label: "WHATSAPP", href: "https://wa.me/919373956958" },
+              ].map((s, i) => (
                 <a
                   key={s.label}
                   href={s.href}
-                  target="_blank" rel="noopener noreferrer"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   style={{
-                    fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: "clamp(0.8rem, 1.3vh, 1rem)",
-                    color: "var(--text2)", textDecoration: "none",
-                    transition: "color 0.2s",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    fontFamily: "'Geist Mono', monospace",
+                    fontSize: 12,
+                    letterSpacing: "0.14em",
+                    color: "var(--text2)",
+                    textDecoration: "none",
+                    transition: "color 0.3s ease, gap 0.3s ease",
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "var(--text2)")}
+                  onMouseEnter={e => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.color = "var(--gold)";
+                    el.style.gap = "12px";
+                  }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.color = "var(--text2)";
+                    el.style.gap = "8px";
+                  }}
                 >
-                  <span style={{ color: "var(--gold)", fontStyle: "normal" }}>/ </span>{s.label}
+                  {s.label}
+                  <span style={{ opacity: 0.6 }}>→</span>
                 </a>
               ))}
             </div>
+
+            {/* Location tag */}
+            <div className="fade-up" style={{
+              ...d(550),
+              marginTop: 32,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              fontFamily: "'Geist Mono', monospace",
+              fontSize: 11,
+              letterSpacing: "0.16em",
+              color: "var(--text2)",
+            }}>
+              <span style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "var(--gold)",
+                opacity: 0.7,
+              }} />
+              PUNE, INDIA
+            </div>
+
           </div>
 
-          {/* Footer */}
-          <div className="fade-up slide-footer" style={{
-            ...d(760),
-            position: "absolute", bottom: 24, left: 56, right: 56,
-            display: "flex", justifyContent: "space-between",
-            fontFamily: "'Syne Mono', monospace", fontSize: 10, color: "var(--text3)",
-          }}>
-            <span>© 2025 PARTH GHUMATKAR</span>
-            <span>PUNE, INDIA</span>
-            <span>NEXT.JS · VERCEL · WINDSURF</span>
-          </div>
+          {/* Footer line */}
+          <div className="fade-up" style={{
+            ...d(650),
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 1,
+            background: "linear-gradient(to right, transparent, rgba(200,169,110,0.2), transparent)",
+          }} />
 
         </div>
       )}

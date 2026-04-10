@@ -34,55 +34,27 @@ const PROJECTS = [
   },
 ];
 
-const STACK_CATEGORIES = [
-  {
-    label: "FRONTEND",
-    items: [
-      { name: "Next.js",    icon: "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/nextdotjs.svg",                   invert: true  },
-      { name: "React",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",            invert: false },
-      { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",  invert: false },
-      { name: "Tailwind",   icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",invert: false },
-    ]
-  },
-  {
-    label: "BACKEND & DB",
-    items: [
-      { name: "Python",     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",          invert: false },
-      { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",  invert: false },
-      { name: "Docker",     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",          invert: false },
-      { name: "Neon",       icon: null, textColor: "#00e5cc" },
-    ]
-  },
-  {
-    label: "AI & INFRA",
-    items: [
-      { name: "OpenAI",     icon: "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/openai.svg", invert: true },
-      { name: "Groq",       icon: null, textColor: "#f55036" },
-      { name: "Ollama",     icon: null, textColor: "#ffffff" },
-      { name: "Claude AI",  icon: null, textColor: "#cc785c" },
-    ]
-  },
-  {
-    label: "INFRA & HW",
-    items: [
-      { name: "Arduino",    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/arduino/arduino-original.svg", invert: false },
-      { name: "ESP8266",    icon: null, textColor: "#E8A838" },
-      { name: "AWS",        icon: "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/amazonaws.svg",             invert: true  },
-      { name: "Vercel",     icon: null, textColor: "#ffffff" },
-    ]
-  },
+const baseVideos = [
+  { id: "9xN_c7dH8EA", title: "Contactless Automatic Hand Sanitizer Dispenser - Covid-19", url: "https://www.youtube.com/watch?v=9xN_c7dH8EA" },
+  { id: "4ZPQ9KFTB5M", title: "Robotic Arm Part-1", url: "https://www.youtube.com/watch?v=4ZPQ9KFTB5M" },
+  { id: "LD3r_izDWRc", title: "ALEXA USED AS A T.V REMOTE!", url: "https://www.youtube.com/watch?v=LD3r_izDWRc" },
+  { id: "q3yYeDS2EQg", title: "Hacking Fortnite using hardware automation", url: "https://www.youtube.com/watch?v=q3yYeDS2EQg" },
+  { id: "1Z_ygTjK-Gc", title: "HACKING PIANO TILES USING PYTHON!!", url: "https://www.youtube.com/watch?v=1Z_ygTjK-Gc" },
 ];
+
+const videos = [...baseVideos, ...baseVideos, ...baseVideos];
 
 const Slide02_Projects = ({ isActive }: Props) => {
   const [hov, setHov] = useState<number | null>(null);
   const [preview, setPreview] = useState<number | null>(null);
+  const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const tiltRef = useRef<HTMLDivElement>(null);
   const mousePos = useRef({ x: 0, y: 0 });
   const rafId = useRef<number>(0);
   const currentTilt = useRef({ x: 0, y: 0 });
-  const iconRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const magRafId = useRef<number>(0);
+  const videoScrollRef = useRef<HTMLDivElement>(null);
+  const scrollAnimRef = useRef<number | null>(null);
 
   useEffect(() => {
     const img = imgRef.current;
@@ -149,75 +121,40 @@ const Slide02_Projects = ({ isActive }: Props) => {
     return () => cancelAnimationFrame(rafId.current);
   }, [preview]);
 
-  useEffect(() => {
-    if (!isActive) {
-      cancelAnimationFrame(magRafId.current);
-      iconRefs.current.forEach(el => {
-        if (el) {
-          el.style.transform = 'translate(0,0) scale(1)';
-          el.style.boxShadow = 'none';
-          el.style.borderColor = 'rgba(200,169,110,0.12)';
-        }
-      });
-      return;
+  const handleVideoListMouseEnter = () => {
+    const el = videoScrollRef.current;
+    if (!el) return;
+    const oneThird = el.scrollHeight / 3;
+    if (el.scrollTop === 0) {
+      el.scrollTop = oneThird;
     }
-
-    const MAGNETIC_RADIUS = 80;
-    const MAGNETIC_FORCE = 0.35;
-    const LERP = 0.12;
-
-    const offsets = iconRefs.current.map(() => ({ x: 0, y: 0 }));
-    const targets = iconRefs.current.map(() => ({ x: 0, y: 0 }));
-
-    const animate = () => {
-      const mx = mousePos.current.x;
-      const my = mousePos.current.y;
-
-      iconRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dx = mx - cx;
-        const dy = my - cy;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < MAGNETIC_RADIUS) {
-          const force = (1 - dist / MAGNETIC_RADIUS) * MAGNETIC_FORCE;
-          targets[i].x = dx * force;
-          targets[i].y = dy * force;
-        } else {
-          targets[i].x = 0;
-          targets[i].y = 0;
-        }
-
-        offsets[i].x += (targets[i].x - offsets[i].x) * LERP;
-        offsets[i].y += (targets[i].y - offsets[i].y) * LERP;
-
-        if (Math.abs(offsets[i].x) > 0.1 || Math.abs(offsets[i].y) > 0.1) {
-          el.style.transform = `translate(${offsets[i].x}px, ${offsets[i].y}px) scale(${
-            dist < MAGNETIC_RADIUS ? 1 + (1 - dist / MAGNETIC_RADIUS) * 0.15 : 1
-          })`;
-        } else {
-          el.style.transform = 'translate(0px, 0px) scale(1)';
-        }
-
-        if (dist < MAGNETIC_RADIUS) {
-          const intensity = 1 - dist / MAGNETIC_RADIUS;
-          el.style.boxShadow = `0 0 ${intensity * 20}px rgba(200,169,110,${intensity * 0.4})`;
-          el.style.borderColor = `rgba(200,169,110,${0.15 + intensity * 0.6})`;
-        } else {
-          el.style.boxShadow = 'none';
-          el.style.borderColor = 'rgba(200,169,110,0.12)';
-        }
-      });
-
-      magRafId.current = requestAnimationFrame(animate);
+    const scroll = () => {
+      if (!videoScrollRef.current) return;
+      videoScrollRef.current.scrollTop += 0.7;
+      const { scrollTop, scrollHeight } = videoScrollRef.current;
+      const third = scrollHeight / 3;
+      if (scrollTop >= third * 2) {
+        videoScrollRef.current.scrollTop = third;
+      }
+      scrollAnimRef.current = requestAnimationFrame(scroll);
     };
+    scrollAnimRef.current = requestAnimationFrame(scroll);
+  };
 
-    magRafId.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(magRafId.current);
-  }, [isActive]);
+  const handleVideoListMouseLeave = () => {
+    if (scrollAnimRef.current) {
+      cancelAnimationFrame(scrollAnimRef.current);
+      scrollAnimRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (scrollAnimRef.current) {
+        cancelAnimationFrame(scrollAnimRef.current);
+      }
+    };
+  }, []);
 
   const d = (ms: number): React.CSSProperties => ({
     animationDelay: `${ms}ms`,
@@ -251,170 +188,186 @@ const Slide02_Projects = ({ isActive }: Props) => {
       {/* Layer 4 — Content */}
       {isActive && (
         <div style={{ position: "absolute", inset: 0, zIndex: 4 }}>
-          <div style={{ display: "flex", height: "100%" }}>
+          {/* ─── Panel divider ─── */}
+          <div style={{ position: "absolute", left: "45%", top: 0, bottom: 0, width: 1, background: "linear-gradient(to bottom, transparent, rgba(200,169,110,0.25) 20%, rgba(200,169,110,0.25) 80%, transparent)", pointerEvents: "none", zIndex: 5 }} />
+          <div style={{ display: "flex", height: "100vh" }}>
 
-            {/* ─── LEFT — Stack ─── */}
+            {/* ─── LEFT — YouTube ─── */}
             <div style={{
               width: "45%",
-              padding: "clamp(3rem, 6vh, 5rem) clamp(2rem, 4vw, 3.5rem)",
+              height: "100vh",
+              paddingTop: 80,
+              paddingLeft: 40,
+              paddingRight: 24,
+              paddingBottom: 0,
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
-              gap: "clamp(1rem, 2vh, 1.5rem)",
+              justifyContent: "flex-start",
+              gap: 12,
+              borderRight: "1px solid var(--border)",
+              background: "linear-gradient(to right, rgba(10,26,10,0.6) 0%, rgba(10,26,10,0.2) 100%)",
             }}>
-              <div>
-                <p className="fade-up" style={{
-                  ...d(0),
-                  fontFamily: "'Syne Mono', monospace",
-                  fontSize: "0.75rem",
-                  letterSpacing: "0.3em",
-                  color: "var(--gold)",
-                  marginBottom: "0.5rem",
-                }}>THE STACK</p>
-
-                <h2 className="fade-up" style={{
-                  ...d(80),
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontWeight: 300,
-                  fontSize: "clamp(2.5rem, min(5vw, 7vh), 4.5rem)",
-                  lineHeight: 0.92,
-                  color: "#F5EDD8",
-                  textShadow: "0 4px 24px rgba(0,0,0,0.9)",
-                }}>What I<br />Build With.</h2>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
+                <div style={{ width: 18, height: 13, borderRadius: 3, background: "#ff0000", display: "inline-flex", alignItems: "center", justifyContent: "center", marginRight: 8, flexShrink: 0 }}>
+                  <div style={{ borderLeft: "7px solid white", borderTop: "4px solid transparent", borderBottom: "4px solid transparent", marginLeft: 1 }} />
+                </div>
+                <p style={{ fontFamily: "'Geist Mono', monospace", fontSize: 11, letterSpacing: "0.2em", fontWeight: 600, color: "var(--gold)", margin: 0 }}>ON YOUTUBE</p>
               </div>
 
-              {/* Categorized stack grid */}
-              <div className="fade-up" style={{
-                ...d(180),
-                display: "flex",
-                flexDirection: "column",
-                gap: "clamp(0.75rem, 1.5vh, 1.25rem)",
-              }}>
-                {(() => {
-                  let idx = 0;
-                  return STACK_CATEGORIES.map((cat, ci) => (
-                  <div key={ci}>
-                    <p style={{
-                      fontFamily: "'Syne Mono', monospace",
-                      fontSize: "0.65rem",
-                      letterSpacing: "0.2em",
-                      color: "rgba(200,169,110,0.75)",
-                      marginBottom: "0.6rem",
-                    }}>{cat.label}</p>
+              <a
+                href="https://youtube.com/@parthghumatkar606"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 13, fontWeight: 500, color: "var(--text2)", textDecoration: "none", marginBottom: 12 }}
+              >@parthghumatkar606 ↗</a>
+
+              <div style={{ position: "relative", width: "100%" }}>
+                <div className="video-scroll" ref={videoScrollRef} onMouseEnter={handleVideoListMouseEnter} onMouseLeave={handleVideoListMouseLeave} style={{ display: "flex", flexDirection: "column", gap: 3, width: "100%", overflowY: "auto", maxHeight: "calc(100vh - 180px)" }}>
+                {videos.map((video, vi) => (
+                  <div
+                    key={video.id}
+                    onClick={() => window.open(video.url, '_blank')}
+                    onMouseEnter={() => setHoveredVideo(video.id)}
+                    onMouseLeave={() => setHoveredVideo(null)}
+                    style={{
+                      position: "relative",
+                      width: "100%",
+                      height: 130,
+                      overflow: "hidden",
+                      cursor: "pointer",
+                      borderRadius: 3,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {/* Thumbnail */}
+                    <div style={{ position: "absolute", inset: 0 }}>
+                      <img
+                        src={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
+                        alt={video.title}
+                        loading="lazy"
+                        onError={(e) => { e.currentTarget.src = `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`; }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          transform: hoveredVideo === video.id ? "scale(1.06)" : "scale(1)",
+                          transition: "transform 0.5s ease",
+                        }}
+                      />
+                    </div>
+                    {/* Dark gradient overlay */}
                     <div style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(4, 1fr)",
-                      gap: "8px",
+                      position: "absolute",
+                      inset: 0,
+                      background: hoveredVideo === video.id
+                        ? "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(10,26,10,0.4) 50%, rgba(200,169,110,0.08) 100%)"
+                        : "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%)",
+                      transition: "background 0.3s ease",
+                    }} />
+                    {/* Gold left border flash */}
+                    <div style={{
+                      position: "absolute",
+                      left: 0, top: 0, bottom: 0,
+                      width: hoveredVideo === video.id ? 3 : 0,
+                      background: "var(--gold)",
+                      transition: "width 0.25s ease",
+                    }} />
+                    {/* Video index */}
+                    <span style={{
+                      position: "absolute",
+                      top: 10, left: 12,
+                      fontFamily: "'Geist Mono', monospace",
+                      fontSize: 10,
+                      color: "rgba(255,255,255,0.4)",
+                      letterSpacing: "0.1em",
+                    }}>{String((vi % 5 + 1)).padStart(2, '0')}</span>
+                    {/* Bottom content */}
+                    <div style={{
+                      position: "absolute",
+                      bottom: 0, left: 0, right: 0,
+                      padding: "10px 14px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-end",
                     }}>
-                      {cat.items.map((item, ii) => (
-                        <div
-                          key={ii}
-                          ref={el => { iconRefs.current[idx++] = el; }}
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: "5px",
-                            padding: "clamp(0.65rem, 1.2vh, 0.9rem) 0.5rem",
-                            border: "1px solid rgba(200,169,110,0.12)",
-                            background: "rgba(200,169,110,0.03)",
-                            transition: "border-color 0.2s ease, background 0.2s ease",
-                            cursor: "default",
-                            willChange: "transform",
-                          }}
-                          onMouseEnter={e => {
-                            const el = e.currentTarget as HTMLElement;
-                            el.style.background = "rgba(200,169,110,0.08)";
-                          }}
-                          onMouseLeave={e => {
-                            const el = e.currentTarget as HTMLElement;
-                            el.style.background = "rgba(200,169,110,0.03)";
-                          }}
-                        >
-                          {item.icon ? (
-                            <img
-                              src={item.icon}
-                              alt={item.name}
-                              style={{
-                                width: "clamp(24px, 2.5vw, 32px)",
-                                height: "clamp(24px, 2.5vw, 32px)",
-                                objectFit: "contain",
-                                filter: item.invert ? "brightness(0) invert(1)" : "none",
-                                opacity: 0.9,
-                              }}
-                              onError={e => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                            />
-                          ) : (
-                            <span style={{
-                              fontSize: "clamp(0.55rem, 0.75vw, 0.7rem)",
-                              fontFamily: "'Syne Mono', monospace",
-                              fontWeight: 600,
-                              color: (item as { textColor?: string }).textColor || "#C8A96E",
-                              letterSpacing: "0.04em",
-                              textAlign: "center",
-                              lineHeight: 1,
-                              height: "clamp(24px, 2.5vw, 32px)",
-                              display: "flex",
-                              alignItems: "center",
-                            }}>
-                              {item.name.toUpperCase()}
-                            </span>
-                          )}
-                          <span style={{
-                            fontFamily: "'Syne Mono', monospace",
-                            fontSize: "clamp(0.5rem, 0.65vw, 0.6rem)",
-                            letterSpacing: "0.04em",
-                            color: "rgba(245,237,216,0.75)",
-                            textAlign: "center",
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            maxWidth: "100%",
-                            textOverflow: "ellipsis",
-                          }}>{item.name}</span>
+                      <span style={{
+                        fontFamily: "'Space Grotesk', sans-serif",
+                        fontSize: 13,
+                        fontWeight: 600,
+                        color: "#ffffff",
+                        lineHeight: 1.3,
+                        textShadow: "0 1px 8px rgba(0,0,0,0.8)",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        maxWidth: "75%",
+                      }}>{video.title}</span>
+                      <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                        opacity: hoveredVideo === video.id ? 1 : 0,
+                        transition: "opacity 0.3s ease",
+                      }}>
+                        <div style={{
+                          width: 28, height: 28, borderRadius: "50%",
+                          background: "var(--gold)",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          flexShrink: 0,
+                        }}>
+                          <div style={{ width: 0, height: 0, borderLeft: "8px solid #0a1a0a", borderTop: "5px solid transparent", borderBottom: "5px solid transparent", marginLeft: 2 }} />
                         </div>
-                      ))}
+                        <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 9, letterSpacing: "0.16em", color: "var(--gold)", fontWeight: 600 }}>WATCH</span>
+                      </div>
                     </div>
                   </div>
-                  ));
-                })()}
+                ))}
+                </div>
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 60, background: "linear-gradient(to top, rgba(10,26,10,0.95) 0%, transparent 100%)", pointerEvents: "none", zIndex: 4 }} />
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "center", marginTop: 6, opacity: 0.5 }}>
+                <div style={{ width: 20, height: 20, display: "flex", alignItems: "center", justifyContent: "center", animation: "bounceY 1.5s ease-in-out infinite" }}>
+                  <svg width="14" height="8" viewBox="0 0 14 8" fill="none">
+                    <path d="M1 1L7 7L13 1" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
               </div>
             </div>
 
-            {/* ─── DIVIDER ─── */}
-            <div style={{
-              width: "1px",
-              alignSelf: "stretch",
-              margin: "10% 0",
-              background: "linear-gradient(to bottom, transparent, rgba(200,169,110,0.25), transparent)",
-            }} />
-
             {/* ─── RIGHT — Projects ─── */}
-            <div style={{
-              flex: 1,
-              padding: "clamp(3rem, 6vh, 5rem) clamp(2rem, 4vw, 3.5rem)",
+            <div className="right-panel-scroll" style={{
+              width: "55%",
+              height: "100vh",
+              paddingTop: 80,
+              paddingLeft: 40,
+              paddingRight: 56,
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
+              overflowY: "auto",
               position: "relative",
-              overflow: "visible",
             }}>
 
               <p className="fade-up" style={{
                 ...d(0),
-                fontFamily: "'Syne Mono', monospace",
-                fontSize: "0.65rem",
-                letterSpacing: "0.3em",
+                fontFamily: "'Geist Mono', monospace",
+                fontSize: 11,
+                letterSpacing: "0.2em",
+                fontWeight: 600,
                 color: "var(--gold)",
                 marginBottom: "0.5rem",
               }}>SELECTED WORK</p>
 
               <h2 className="fade-up" style={{
                 ...d(80),
-                fontFamily: "'Cormorant Garamond', serif",
-                fontWeight: 300,
-                fontSize: "clamp(2rem, min(3.5vw, 5vh), 3rem)",
-                lineHeight: 0.92,
-                color: "#F5EDD8",
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 800,
+                fontSize: "clamp(28px, 3.2vw, 46px)",
+                letterSpacing: "-0.03em",
+                lineHeight: 1.05,
+                color: "var(--text)",
                 textShadow: "0 4px 24px rgba(0,0,0,0.9)",
                 marginBottom: "clamp(1.5rem, 3vh, 2.5rem)",
               }}>Three Things<br />I've Shipped.</h2>
@@ -445,27 +398,28 @@ const Slide02_Projects = ({ isActive }: Props) => {
                     <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                         <span style={{
-                          fontFamily: "'Syne Mono', monospace",
-                          fontSize: "0.55rem",
-                          color: "rgba(200,169,110,0.5)",
-                          letterSpacing: "0.15em",
+                          fontFamily: "'Geist Mono', monospace",
+                          fontSize: 11,
+                          color: "var(--gold)",
+                          opacity: 0.7,
+                          letterSpacing: "0.1em",
                         }}>{p.num}</span>
                         <span style={{
-                          fontFamily: "'Cormorant Garamond', serif",
-                          fontWeight: 300,
-                          fontSize: "clamp(2rem, min(3.5vw, 5vh), 3.25rem)",
-                          letterSpacing: "0.04em",
-                          color: hov === i ? "#C8A96E" : "#F5EDD8",
+                          fontFamily: "'Space Grotesk', sans-serif",
+                          fontWeight: 800,
+                          fontSize: "clamp(24px, 3vw, 40px)",
+                          letterSpacing: "-0.03em",
+                          color: hov === i ? "#C8A96E" : "var(--text)",
                           textShadow: "0 2px 20px rgba(0,0,0,0.95)",
                           transition: "color 0.3s ease",
                         }}>{p.name}</span>
                       </div>
                       <span style={{
-                        fontFamily: "'Cormorant Garamond', serif",
-                        fontStyle: "italic",
-                        fontSize: "clamp(0.75rem, 1vh, 0.9rem)",
-                        color: hov === i ? "rgba(245,237,216,0.75)" : "rgba(245,237,216,0.45)",
-                        paddingLeft: "calc(0.55rem + 12px)",
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontStyle: "normal",
+                        fontWeight: 400,
+                        fontSize: 14,
+                        color: "rgba(245,237,216,0.6)",
                         transition: "color 0.3s ease",
                       }}>{p.desc}</span>
                     </div>
@@ -508,10 +462,11 @@ const Slide02_Projects = ({ isActive }: Props) => {
                 style={{
                   position: "absolute",
                   top: "50%",
-                  left: "58%",
+                  left: "70%",
                   right: "auto",
                   marginTop: "0",
-                  width: "380px",
+                  width: "320px",
+                  maxWidth: 320,
                   background: "rgba(5,15,5,0.88)",
                   backdropFilter: "blur(16px)",
                   WebkitBackdropFilter: "blur(16px)",
@@ -520,7 +475,7 @@ const Slide02_Projects = ({ isActive }: Props) => {
                   opacity: 0,
                   transform: "perspective(1200px) rotateX(0deg) rotateY(0deg) scale(0.85) translate(-50%, -50%)",
                   transition: "opacity 0.35s ease, transform 0.1s ease",
-                  zIndex: 20,
+                  zIndex: 10,
                   boxShadow: "0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(200,169,110,0.2), inset 0 1px 0 rgba(200,169,110,0.1)",
                   pointerEvents: "none",
                   willChange: "transform",
@@ -660,6 +615,7 @@ const Slide02_Projects = ({ isActive }: Props) => {
             </div>
 
           </div>
+
         </div>
       )}
     </div>

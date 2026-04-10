@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 
-interface Props { isActive: boolean; goTo: (idx: number) => void; }
+interface Props { isActive: boolean; }
 
 const MILESTONES = [
   {
@@ -105,24 +105,29 @@ const Slide03_StackAbout = ({ isActive }: Props) => {
         <div style={{ position: "absolute", inset: 0, zIndex: 4, display: "flex" }}>
 
           {/* ─── LEFT — Story panel ─── */}
-          <div style={{
+          <div className="left-panel-scroll" style={{
             width: "52%",
             minWidth: 0,
-            overflow: "visible",
-            padding: "clamp(3rem, 6vh, 5rem) clamp(2rem, 4vw, 4rem)",
+            height: "100vh",
+            overflowY: "auto",
+            paddingTop: 72,
+            paddingLeft: 56,
+            paddingRight: 40,
+            paddingBottom: 32,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
-            gap: "clamp(0.5rem, 1vh, 1rem)",
+            justifyContent: "flex-start",
+            gap: 8,
           }}>
 
             <p className="fade-up" style={{
               ...d(0),
-              fontFamily: "'Syne Mono', monospace",
-              fontSize: "0.65rem",
-              letterSpacing: "0.3em",
+              fontFamily: "var(--font-mono)",
+              fontSize: 12,
+              letterSpacing: "0.18em",
               color: "var(--gold)",
-              margin: 0,
+              marginTop: 0,
+              marginBottom: 12,
             }}>THE ORIGIN STORY</p>
 
             {/* Year + age */}
@@ -132,41 +137,45 @@ const Slide03_StackAbout = ({ isActive }: Props) => {
               gap: "12px",
             }}>
               <span style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: "clamp(3rem, 7vw, 6rem)",
-                fontWeight: 300,
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontSize: "clamp(44px, 5.5vw, 72px)",
+                fontWeight: 800,
+                letterSpacing: "-0.03em",
+                marginTop: 8,
                 color: "#C8A96E",
                 lineHeight: 1,
                 transition: "all 0.35s ease",
               }}>{m.year}</span>
               <span style={{
-                fontFamily: "'Syne Mono', monospace",
-                fontSize: "0.6rem",
+                fontFamily: "'Geist Mono', monospace",
+                fontSize: 13,
                 letterSpacing: "0.2em",
-                color: "rgba(200,169,110,0.5)",
+                color: "rgba(245,237,216,0.5)",
+                marginLeft: 12,
                 transition: "all 0.35s ease",
               }}>{m.age}</span>
             </div>
 
             {/* Title */}
             <h2 style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontWeight: 300,
-              fontSize: "clamp(1.75rem, min(3.5vw, 5vh), 3rem)",
-              lineHeight: 0.95,
-              color: "#F5EDD8",
-              textShadow: "0 4px 24px rgba(0,0,0,0.9)",
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 700,
+              fontSize: 24,
+              fontStyle: "normal",
+              lineHeight: 1,
+              color: "var(--text)",
+              marginTop: 4,
               transition: "all 0.35s ease",
               margin: 0,
             }}>{m.title}</h2>
 
             {/* Body */}
             <p style={{
-              fontFamily: "'Cormorant Garamond', serif",
+              fontFamily: "'DM Sans', sans-serif",
               fontWeight: 400,
-              fontSize: "clamp(0.85rem, 1.3vh, 1.05rem)",
+              fontSize: 15,
               color: "rgba(245,237,216,0.75)",
-              lineHeight: 1.8,
+              lineHeight: 1.65,
               maxWidth: "460px",
               textShadow: "0 1px 8px rgba(0,0,0,0.8)",
               transition: "all 0.35s ease",
@@ -180,11 +189,11 @@ const Slide03_StackAbout = ({ isActive }: Props) => {
               transition: "all 0.35s ease",
             }}>
               <p style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontWeight: 300,
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 400,
                 fontStyle: "italic",
-                fontSize: "clamp(0.95rem, 1.5vh, 1.25rem)",
-                color: "rgba(200,169,110,0.85)",
+                fontSize: 14,
+                color: "var(--gold)",
                 lineHeight: 1.5,
                 textShadow: "0 2px 12px rgba(0,0,0,0.8)",
                 margin: 0,
@@ -193,97 +202,75 @@ const Slide03_StackAbout = ({ isActive }: Props) => {
             </div>
 
             {/* Milestone photo */}
-            {m.image && (
-              <div style={{
-                marginTop: "clamp(0.5rem, 1vh, 1rem)",
-                width: "calc(100% + clamp(4rem, 8vw, 8rem))",
-                marginLeft: "calc(-1 * clamp(2rem, 4vw, 4rem))",
-                height: "clamp(220px, 35vh, 320px)",
-                overflow: "hidden",
-                border: "1px solid rgba(200,169,110,0.25)",
-                position: "relative",
-                flexShrink: 0,
-              }}>
-                <img
-                  key={m.image}
-                  src={m.image}
-                  alt={m.title}
+            {m.image ? (
+              <>
+              <div style={{ width: "100%", maxWidth: 520, height: 240, overflow: "hidden", borderRadius: 3, marginTop: 20, position: "relative" }}
+                onMouseEnter={e => {
+                  const img = (e.currentTarget as HTMLElement).querySelector("img") as HTMLElement;
+                  if (img) { img.style.transform = "scale(1.04)"; img.style.filter = "contrast(1.1) saturate(1.0)"; }
+                }}
+                onMouseLeave={e => {
+                  const img = (e.currentTarget as HTMLElement).querySelector("img") as HTMLElement;
+                  if (img) { img.style.transform = "scale(1)"; img.style.filter = "contrast(1.05) saturate(0.9)"; }
+                }}
+              >
+                {/* Main photo frame — kept as wrapper for corner accents */}
+                <div
                   style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
+                    position: "relative",
                     width: "100%",
                     height: "100%",
-                    objectFit: "contain",
-                    objectPosition: (m as { imagePosition?: string }).imagePosition || "center center",
-                    display: "block",
-                    filter: "brightness(0.95) contrast(1.1) saturate(0.85)",
-                    animation: "imgFadeIn 0.4s ease forwards",
                   }}
-                />
-                {/* Gold corner accents */}
-                <div style={{
-                  position: "absolute", top: 0, left: 0,
-                  width: "20px", height: "20px",
-                  borderTop: "2px solid #C8A96E",
-                  borderLeft: "2px solid #C8A96E",
-                  pointerEvents: "none", zIndex: 2,
-                }} />
-                <div style={{
-                  position: "absolute", bottom: 0, right: 0,
-                  width: "20px", height: "20px",
-                  borderBottom: "2px solid #C8A96E",
-                  borderRight: "2px solid #C8A96E",
-                  pointerEvents: "none", zIndex: 2,
-                }} />
-                <div style={{
-                  position: "absolute",
-                  bottom: "8px", left: "10px",
-                  fontFamily: "'Syne Mono', monospace",
-                  fontSize: "0.45rem",
-                  letterSpacing: "0.15em",
-                  color: "rgba(200,169,110,0.8)",
-                  textShadow: "0 1px 4px rgba(0,0,0,0.9)",
-                  zIndex: 2,
-                }}>{m.year} · {m.age}</div>
-              </div>
-            )}
+                >
+                  <img
+                    key={m.image}
+                    src={m.image}
+                    alt={m.title}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      objectPosition: "center top",
+                      filter: "contrast(1.05) saturate(0.9)",
+                      transition: "transform 0.6s ease, filter 0.4s ease",
+                      display: "block",
+                    }}
+                  />
+                  {/* Corner accents */}
+                  <div style={{ position: "absolute", top: 0, left: 0, width: 24, height: 24, borderTop: "2px solid var(--gold)", borderLeft: "2px solid var(--gold)", zIndex: 2, pointerEvents: "none" }} />
+                  <div style={{ position: "absolute", top: 0, right: 0, width: 24, height: 24, borderTop: "2px solid var(--gold)", borderRight: "2px solid var(--gold)", zIndex: 2, pointerEvents: "none" }} />
+                  <div style={{ position: "absolute", bottom: 0, left: 0, width: 24, height: 24, borderBottom: "2px solid var(--gold)", borderLeft: "2px solid var(--gold)", zIndex: 2, pointerEvents: "none" }} />
+                  <div style={{ position: "absolute", bottom: 0, right: 0, width: 24, height: 24, borderBottom: "2px solid var(--gold)", borderRight: "2px solid var(--gold)", zIndex: 2, pointerEvents: "none" }} />
+                  {/* Bottom gradient overlay */}
+                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "40%", background: "linear-gradient(to top, rgba(10,26,10,0.6) 0%, transparent 100%)", pointerEvents: "none", zIndex: 1 }} />
+                </div>
 
-            {!m.image && (
+              </div>
+              <p style={{
+                marginTop: 8,
+                textAlign: "left",
+                fontFamily: "'Geist Mono', monospace",
+                fontSize: 9,
+                letterSpacing: "0.3em",
+                color: "rgba(200,169,110,0.5)",
+                margin: "8px 0 0 0",
+              }}>{m.year} · ARCHIVE</p>
+              </>
+            ) : (
               <div style={{
-                marginTop: "clamp(0.75rem, 1.5vh, 1.25rem)",
                 width: "100%",
-                height: "clamp(180px, 28vh, 260px)",
-                border: "1px solid rgba(200,169,110,0.15)",
+                aspectRatio: "4/3",
+                border: "1px dashed rgba(200,169,110,0.2)",
+                borderRadius: 2,
                 display: "flex",
-                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                background: "rgba(200,169,110,0.02)",
-                flexShrink: 0,
+                flexDirection: "column",
+                gap: 12,
+                marginTop: 24,
               }}>
-                <span style={{
-                  fontFamily: "'Syne Mono', monospace",
-                  fontSize: "0.55rem",
-                  letterSpacing: "0.2em",
-                  color: "rgba(200,169,110,0.4)",
-                }}>
-                  {m.year === "NOW"
-                    ? "THE STORY CONTINUES"
-                    : "NO PHOTO FROM THIS ERA"}
-                </span>
-                <span style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontStyle: "italic",
-                  fontSize: "0.85rem",
-                  color: "rgba(200,169,110,0.25)",
-                  marginTop: "6px",
-                  display: "block",
-                }}>
-                  {m.year === "NOW"
-                    ? "still building · still shipping"
-                    : "the memory lives in the code"}
-                </span>
+                <span style={{ fontSize: 48, color: "rgba(200,169,110,0.2)" }}>◈</span>
+                <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, letterSpacing: "0.2em", color: "rgba(200,169,110,0.3)" }}>CURRENTLY BUILDING</span>
               </div>
             )}
 
@@ -300,32 +287,48 @@ const Slide03_StackAbout = ({ isActive }: Props) => {
 
           {/* ─── RIGHT — Timeline ─── */}
           <div style={{
-            flex: 1,
-            padding: "clamp(3rem, 6vh, 5rem) clamp(2rem, 4vw, 3.5rem)",
+            minWidth: 280,
+            maxWidth: 320,
+            flexShrink: 0,
+            paddingTop: 72,
+            paddingLeft: 48,
+            paddingRight: 40,
+            overflowX: "hidden",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             position: "relative",
           }}>
 
-            <p className="fade-up" style={{
+            {/* Timeline label */}
+            <div className="fade-up" style={{
               ...d(100),
-              fontFamily: "'Syne Mono', monospace",
-              fontSize: "0.65rem",
-              letterSpacing: "0.3em",
-              color: "rgba(200,169,110,0.5)",
-              marginBottom: "clamp(1.5rem, 3vh, 2rem)",
-            }}>TIMELINE — HOVER TO EXPLORE</p>
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              marginBottom: 32,
+            }}>
+              <div style={{ width: 24, height: 1, background: "var(--gold)", opacity: 0.6 }} />
+              <span style={{
+                fontFamily: "'Geist Mono', monospace",
+                fontSize: 11,
+                letterSpacing: "0.2em",
+                color: "var(--gold)",
+                fontWeight: 600,
+                opacity: 1,
+              whiteSpace: "nowrap",
+              }}>TIMELINE — HOVER TO EXPLORE</span>
+            </div>
 
             {/* Vertical connecting line */}
             <div style={{
               position: "absolute",
-              left: "clamp(2rem, 4vw, 3.5rem)",
-              top: "calc(clamp(3rem, 6vh, 5rem) + 2rem + clamp(1.5rem, 3vh, 2rem))",
-              bottom: "calc(clamp(3rem, 6vh, 5rem) + 80px)",
-              width: "1px",
-              background: "linear-gradient(to bottom, rgba(200,169,110,0.3), rgba(200,169,110,0.08))",
-              marginLeft: "7px",
+              left: 48,
+              top: "calc(80px + 1rem + 32px + 1.5rem)",
+              bottom: "calc(32px + 52px + 20px + 1.5rem)",
+              width: 1,
+              background: "rgba(200,169,110,0.2)",
+              marginLeft: 4,
             }} />
 
             {/* Milestone nodes */}
@@ -337,52 +340,86 @@ const Slide03_StackAbout = ({ isActive }: Props) => {
                 style={{
                   ...d(200 + i * 80),
                   display: "flex",
-                  alignItems: "flex-start",
-                  gap: "clamp(0.75rem, 1.5vw, 1.25rem)",
-                  padding: "clamp(0.6rem, 1.2vh, 1rem) 0",
+                  alignItems: "center",
+                  gap: 20,
+                  padding: "14px 0",
                   cursor: "pointer",
+                  position: "relative",
+                  transition: "all 0.3s ease",
                 }}
               >
+                {/* Active accent line */}
+                {active === i && (
+                  <div style={{
+                    position: "absolute",
+                    left: -24,
+                    top: "50%",
+                    width: 16,
+                    height: 2,
+                    background: "var(--gold)",
+                    transform: "translateY(-50%)",
+                    borderRadius: 1,
+                  }} />
+                )}
+
                 {/* Dot */}
-                <div style={{
-                  width: "15px",
-                  height: "15px",
-                  borderRadius: "50%",
-                  border: `2px solid ${active === i ? "#C8A96E" : "rgba(200,169,110,0.25)"}`,
-                  background: active === i ? "#C8A96E" : "transparent",
-                  flexShrink: 0,
-                  marginTop: "4px",
-                  transition: "all 0.25s ease",
-                  boxShadow: active === i ? "0 0 12px rgba(200,169,110,0.6)" : "none",
-                }} />
+                {active === i ? (
+                  <div style={{
+                    width: 12,
+                    height: 12,
+                    borderRadius: "50%",
+                    background: "var(--gold)",
+                    flexShrink: 0,
+                    boxShadow: "0 0 0 3px rgba(200,169,110,0.2), 0 0 12px rgba(200,169,110,0.4)",
+                    transition: "all 0.3s ease",
+                  }} />
+                ) : (
+                  <div style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background: "transparent",
+                    border: "1.5px solid rgba(200,169,110,0.35)",
+                    flexShrink: 0,
+                    transition: "all 0.3s ease",
+                  }} />
+                )}
 
                 {/* Label */}
                 <div>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
                     <span style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: "clamp(1.1rem, 2vw, 1.5rem)",
-                      fontWeight: 300,
-                      color: active === i ? "#C8A96E" : "#F5EDD8",
-                      transition: "color 0.25s ease",
+                      fontFamily: "'Space Grotesk', sans-serif",
+                      fontSize: active === i ? 32 : 28,
+                      fontWeight: active === i ? 800 : 700,
+                      color: active === i ? "var(--gold)" : "var(--text)",
+                      letterSpacing: "-0.02em",
+                      lineHeight: 1,
+                      transition: "all 0.3s ease",
                     }}>{milestone.year}</span>
                     <span style={{
-                      fontFamily: "'Syne Mono', monospace",
-                      fontSize: "0.48rem",
-                      letterSpacing: "0.12em",
-                      color: active === i ? "rgba(200,169,110,0.65)" : "rgba(245,237,216,0.3)",
-                      transition: "color 0.25s ease",
+                      fontFamily: "'Geist Mono', monospace",
+                      fontSize: 12,
+                      letterSpacing: "0.14em",
+                      fontWeight: 500,
+                      color: active === i ? "rgba(245,237,216,0.7)" : "rgba(245,237,216,0.35)",
+                      marginLeft: 8,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: 160,
+                      transition: "all 0.3s ease",
                     }}>— {milestone.title.toUpperCase()}</span>
                   </div>
-                  {active === i && (
-                    <p style={{
-                      fontFamily: "'Syne Mono', monospace",
-                      fontSize: "0.48rem",
-                      letterSpacing: "0.1em",
-                      color: "rgba(200,169,110,0.45)",
-                      margin: "2px 0 0 0",
-                    }}>{milestone.age}</p>
-                  )}
+                  <span style={{
+                    fontFamily: "'Geist Mono', monospace",
+                    fontSize: 11,
+                    letterSpacing: "0.12em",
+                    color: "rgba(245,237,216,0.4)",
+                    marginTop: 4,
+                    display: "block",
+                    transition: "all 0.3s ease",
+                  }}>{milestone.age}</span>
                 </div>
               </div>
             ))}
@@ -390,39 +427,42 @@ const Slide03_StackAbout = ({ isActive }: Props) => {
             {/* Profile card */}
             <div className="fade-up" style={{
               ...d(700),
-              marginTop: "clamp(1.5rem, 3vh, 2rem)",
+              marginTop: 32,
+              paddingTop: 20,
+              borderTop: "1px solid rgba(200,169,110,0.15)",
               display: "flex",
               alignItems: "center",
-              gap: "12px",
-              paddingTop: "clamp(1rem, 2vh, 1.5rem)",
-              borderTop: "1px solid rgba(200,169,110,0.1)",
+              gap: 16,
             }}>
               <img
                 src="/profile.jpg"
                 alt="Parth Ghumatkar"
                 style={{
-                  width: "40px",
-                  height: "40px",
+                  width: 52,
+                  height: 52,
                   borderRadius: "50%",
                   objectFit: "cover",
-                  border: "1px solid rgba(200,169,110,0.4)",
+                  border: "2px solid rgba(200,169,110,0.4)",
                   flexShrink: 0,
+                  boxShadow: "0 0 0 4px rgba(200,169,110,0.08)",
                 }}
               />
               <div>
                 <p style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: "0.95rem",
-                  color: "#F5EDD8",
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontSize: 16,
+                  fontWeight: 700,
+                  color: "var(--text)",
                   margin: 0,
                   lineHeight: 1.2,
                 }}>Parth Ghumatkar</p>
                 <p style={{
-                  fontFamily: "'Syne Mono', monospace",
-                  fontSize: "0.45rem",
-                  letterSpacing: "0.1em",
-                  color: "rgba(200,169,110,0.5)",
-                  margin: "2px 0 0 0",
+                  fontFamily: "'Geist Mono', monospace",
+                  fontSize: 11,
+                  letterSpacing: "0.14em",
+                  color: "var(--text2)",
+                  margin: "4px 0 0 0",
+                whiteSpace: "nowrap",
                 }}>DEVELOPER · BUILDER · ENTHUSIAST</p>
               </div>
             </div>
