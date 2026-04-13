@@ -202,9 +202,9 @@ const Slide03_StackAbout = ({ isActive }: Props) => {
             </div>
 
             {/* Milestone photo */}
-            {m.image ? (
+            {m.image && (
               <>
-              <div style={{ width: "100%", maxWidth: 520, height: 240, overflow: "hidden", borderRadius: 3, marginTop: 20, position: "relative" }}
+              <div style={{ width: "100%", maxWidth: 520, aspectRatio: "4/3", overflow: "hidden", borderRadius: 3, marginTop: 20, position: "relative", background: "rgba(0,0,0,0.15)" }}
                 onMouseEnter={e => {
                   const img = (e.currentTarget as HTMLElement).querySelector("img") as HTMLElement;
                   if (img) { img.style.transform = "scale(1.04)"; img.style.filter = "contrast(1.1) saturate(1.0)"; }
@@ -229,8 +229,8 @@ const Slide03_StackAbout = ({ isActive }: Props) => {
                     style={{
                       width: "100%",
                       height: "100%",
-                      objectFit: "cover",
-                      objectPosition: "center top",
+                      objectFit: "contain",
+                      objectPosition: (m as { imagePosition?: string }).imagePosition || "center center",
                       filter: "contrast(1.05) saturate(0.9)",
                       transition: "transform 0.6s ease, filter 0.4s ease",
                       display: "block",
@@ -256,22 +256,6 @@ const Slide03_StackAbout = ({ isActive }: Props) => {
                 margin: "8px 0 0 0",
               }}>{m.year} · ARCHIVE</p>
               </>
-            ) : (
-              <div style={{
-                width: "100%",
-                aspectRatio: "4/3",
-                border: "1px dashed rgba(200,169,110,0.2)",
-                borderRadius: 2,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                gap: 12,
-                marginTop: 24,
-              }}>
-                <span style={{ fontSize: 48, color: "rgba(200,169,110,0.2)" }}>◈</span>
-                <span style={{ fontFamily: "'Geist Mono', monospace", fontSize: 10, letterSpacing: "0.2em", color: "rgba(200,169,110,0.3)" }}>CURRENTLY BUILDING</span>
-              </div>
             )}
 
           </div>
@@ -434,19 +418,6 @@ const Slide03_StackAbout = ({ isActive }: Props) => {
               alignItems: "center",
               gap: 16,
             }}>
-              <img
-                src="/profile.jpg"
-                alt="Parth Ghumatkar"
-                style={{
-                  width: 52,
-                  height: 52,
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  border: "2px solid rgba(200,169,110,0.4)",
-                  flexShrink: 0,
-                  boxShadow: "0 0 0 4px rgba(200,169,110,0.08)",
-                }}
-              />
               <div>
                 <p style={{
                   fontFamily: "'Space Grotesk', sans-serif",

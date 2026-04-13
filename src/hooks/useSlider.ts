@@ -25,19 +25,21 @@ export function useSlider(total: number) {
   const goNext = useCallback(() => goTo(currentSlide + 1), [currentSlide, goTo]);
   const goPrev = useCallback(() => goTo(currentSlide - 1), [currentSlide, goTo]);
 
-  // Wheel — 1000ms debounce
+  // Wheel
   useEffect(() => {
-    let lastWheel = 0;
     const onWheel = (e: WheelEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.closest('.left-panel-scroll')) {
+        return;
+      }
       e.preventDefault();
-      const now = Date.now();
-      if (now - lastWheel < 1000) return;
-      lastWheel = now;
+      if (isTransitioning) return;
+      if (Math.abs(e.deltaY) < 40) return;
       if (e.deltaY > 0) goNext(); else goPrev();
     };
     window.addEventListener("wheel", onWheel, { passive: false });
     return () => window.removeEventListener("wheel", onWheel);
-  }, [goNext, goPrev]);
+  }, [goNext, goPrev, isTransitioning]);
 
   // Keyboard
   useEffect(() => {
